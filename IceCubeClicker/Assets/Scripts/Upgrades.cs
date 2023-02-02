@@ -8,8 +8,6 @@ public class Upgrades : MonoBehaviour
 {
     public IceCube iceCube;
 
-    [SerializeField] private UIManager uiManager;
-    
     public int denserCubesLvl;
     public int strongerPickLvl;
     public int efficientMiningLvl;
@@ -38,16 +36,9 @@ public class Upgrades : MonoBehaviour
         efficientMiningCost = 10;
         critMineChanceCost = 100;
         critMineDamageCost = 100;
-
-        Button EMB = uiManager.effMinButton;
-        EMB.clicked += efficientMining;
-        uiManager.strPicButton.clicked += strongerPick;
-        uiManager.denCubButton.clicked += denserCubes;
-        uiManager.morCrtButton.clicked += critMineChance;
-        uiManager.strCrtButton.clicked += critMineDamage;
     }
 
-    private void strongerPick()
+    public void strongerPick()
     {
         if (GameManager.Instance.ice >= strongerPickCost)
         {
@@ -59,7 +50,7 @@ public class Upgrades : MonoBehaviour
         }
     }
 
-    private void denserCubes()
+    public void denserCubes()
     {
         if (GameManager.Instance.ice >= denserCubesCost)
         {
@@ -71,7 +62,7 @@ public class Upgrades : MonoBehaviour
         }
     }
 
-    private void efficientMining()
+    public void efficientMining()
     {
         if (GameManager.Instance.ice >= efficientMiningCost)
         {
@@ -82,7 +73,7 @@ public class Upgrades : MonoBehaviour
         }
     }
 
-    private void critMineChance()
+    public void critMineChance()
     {
         if (GameManager.Instance.ice >= critMineChanceCost)
         {
@@ -94,7 +85,7 @@ public class Upgrades : MonoBehaviour
         }
     }
 
-    private void critMineDamage()
+    public void critMineDamage()
     {
         if (GameManager.Instance.ice >= critMineDamageCost)
         {

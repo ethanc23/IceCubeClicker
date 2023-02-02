@@ -52,6 +52,12 @@ public class UIManager : MonoBehaviour
         denCubButton = root.Q<Button>("denCubButton");
         morCrtButton = root.Q<Button>("morCrtButton");
         strCrtButton = root.Q<Button>("strCrtButton");
+
+        effMinButton.clicked += upgrades.efficientMining;
+        strPicButton.clicked += upgrades.strongerPick;
+        denCubButton.clicked += upgrades.denserCubes;
+        morCrtButton.clicked += upgrades.critMineChance;
+        strCrtButton.clicked += upgrades.critMineDamage;
     }
 
     // Update is called once per frame
