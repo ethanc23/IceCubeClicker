@@ -1,10 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class Upgrades : MonoBehaviour
 {
     public IceCube iceCube;
+
+    [SerializeField] private UIManager uiManager;
     
     public int denserCubesLvl;
     public int strongerPickLvl;
@@ -12,7 +16,6 @@ public class Upgrades : MonoBehaviour
     public int critMineChanceLvl;
     public int critMineDamageLvl;
     int minerLvl;
-
 
     public int denserCubesCost;
     public int strongerPickCost;
@@ -35,9 +38,16 @@ public class Upgrades : MonoBehaviour
         efficientMiningCost = 10;
         critMineChanceCost = 100;
         critMineDamageCost = 100;
+
+        Button EMB = uiManager.effMinButton;
+        EMB.clicked += efficientMining;
+        uiManager.strPicButton.clicked += strongerPick;
+        uiManager.denCubButton.clicked += denserCubes;
+        uiManager.morCrtButton.clicked += critMineChance;
+        uiManager.strCrtButton.clicked += critMineDamage;
     }
 
-    public void strongerPick()
+    private void strongerPick()
     {
         if (GameManager.Instance.ice >= strongerPickCost)
         {
@@ -49,7 +59,7 @@ public class Upgrades : MonoBehaviour
         }
     }
 
-    public void denserCubes()
+    private void denserCubes()
     {
         if (GameManager.Instance.ice >= denserCubesCost)
         {
@@ -61,7 +71,7 @@ public class Upgrades : MonoBehaviour
         }
     }
 
-    public void efficientMining()
+    private void efficientMining()
     {
         if (GameManager.Instance.ice >= efficientMiningCost)
         {
@@ -72,7 +82,7 @@ public class Upgrades : MonoBehaviour
         }
     }
 
-    public void critMineChance()
+    private void critMineChance()
     {
         if (GameManager.Instance.ice >= critMineChanceCost)
         {
@@ -84,7 +94,7 @@ public class Upgrades : MonoBehaviour
         }
     }
 
-    public void critMineDamage()
+    private void critMineDamage()
     {
         if (GameManager.Instance.ice >= critMineDamageCost)
         {
@@ -93,15 +103,5 @@ public class Upgrades : MonoBehaviour
             critMineDamageLvl++;
             critMineDamageCost = 100 + (int)Mathf.Floor(50 * Mathf.Pow(critMineDamageLvl, 1.5f));
         }
-    }
-
-    public void miner()
-    {
-
-    }
-
-    public void drill()
-    {
-
     }
 }

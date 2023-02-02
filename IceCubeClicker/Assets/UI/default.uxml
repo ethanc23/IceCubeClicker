@@ -1,20 +1,56 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
     <Style src="project://database/Assets/UI/default.uss?fileID=7433441132597879392&amp;guid=e01585af7d639d04abf36581ccf0fd5c&amp;type=3#default" />
     <ui:VisualElement name="Background" style="flex-grow: 1; align-items: flex-end; justify-content: flex-end;">
-        <ui:VisualElement name="Upgrades" style="height: 275px; width: 180px; align-items: flex-start; justify-content: flex-start; background-color: rgb(48, 48, 48); translate: 0 -5px;">
-            <ui:VisualElement name="EffMinPanel" style="width: 100%; flex-direction: row; align-items: stretch; background-color: rgb(48, 48, 48); -unity-background-image-tint-color: rgb(196, 196, 196);">
-                <ui:VisualElement name="Num" style="background-color: rgb(88, 88, 88); left: 2px; top: 2px; height: 27px; width: 30px; right: 2px; align-items: center; justify-content: center;">
-                    <ui:Label text="Num" display-tooltip-when-elided="true" name="num" style="justify-content: flex-end; align-items: center;" />
+        <ui:VisualElement name="Upgrades" style="height: 90%; width: 35%; align-items: flex-start; justify-content: flex-start; background-color: rgb(48, 48, 48); translate: 0 -5px;">
+            <ui:VisualElement style="width: 100%; flex-direction: row; align-items: stretch; background-color: rgb(48, 48, 48); -unity-background-image-tint-color: rgb(196, 196, 196); height: 5%; margin-bottom: 5px;">
+                <ui:VisualElement style="background-color: rgb(88, 88, 88); left: 2px; top: 2px; height: 100%; width: 10%; right: 2px; align-items: center; justify-content: center; border-left-width: 0; border-right-width: 0; border-top-width: 0; border-bottom-width: 0; border-left-color: rgb(56, 56, 56); border-right-color: rgb(56, 56, 56); border-top-color: rgb(56, 56, 56); border-bottom-color: rgb(56, 56, 56); border-top-left-radius: 3px; border-bottom-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px;">
+                    <ui:Label text="Num" display-tooltip-when-elided="true" name="effMinNum" style="justify-content: flex-end; align-items: center; font-size: 25%;" />
                 </ui:VisualElement>
-                <ui:Button text="Efficient Mining" display-tooltip-when-elided="true" name="effMinButton" style="height: 29px; width: 90px; align-items: auto;" />
-                <ui:VisualElement name="Cost" style="background-color: rgb(88, 88, 88); left: auto; top: 2px; height: 27px; width: 60px; right: auto; justify-content: center; align-items: flex-start;">
-                    <ui:Label text="Cost" display-tooltip-when-elided="true" name="cost" style="justify-content: flex-end; align-items: center;" />
+                <ui:Button text="Efficient Mining" display-tooltip-when-elided="true" name="effMinButton" style="height: 100%; width: 70%; align-items: auto; border-left-width: 0; border-right-width: 0; border-top-width: 0; border-bottom-width: 0; margin-left: 5px; margin-right: 3px; padding-left: 1px; padding-right: 1px; margin-top: 2px; font-size: 25%;" />
+                <ui:VisualElement style="background-color: rgb(88, 88, 88); left: auto; top: 2px; height: 100%; width: 20%; right: auto; justify-content: center; align-items: flex-start; border-top-left-radius: 3px; border-bottom-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px;">
+                    <ui:Label text="Cost" display-tooltip-when-elided="true" name="effMinCost" style="justify-content: flex-end; align-items: center; padding-left: 5px; font-size: 25px;" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement style="width: 100%; flex-direction: row; align-items: stretch; background-color: rgb(48, 48, 48); -unity-background-image-tint-color: rgb(196, 196, 196); height: 5%; margin-bottom: 5px;">
+                <ui:VisualElement style="background-color: rgb(88, 88, 88); left: 2px; top: 2px; height: 100%; width: 10%; right: 2px; align-items: center; justify-content: center; border-left-width: 0; border-right-width: 0; border-top-width: 0; border-bottom-width: 0; border-left-color: rgb(56, 56, 56); border-right-color: rgb(56, 56, 56); border-top-color: rgb(56, 56, 56); border-bottom-color: rgb(56, 56, 56); border-top-left-radius: 3px; border-bottom-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px;">
+                    <ui:Label text="Num" display-tooltip-when-elided="true" name="strPicNum" style="justify-content: flex-end; align-items: center; font-size: 25%; -unity-text-align: upper-center;" />
+                </ui:VisualElement>
+                <ui:Button text="Stronger Pick" display-tooltip-when-elided="true" name="strPicButton" style="height: 100%; width: 70%; align-items: auto; border-left-width: 0; border-right-width: 0; border-top-width: 0; border-bottom-width: 0; margin-left: 5px; margin-right: 3px; padding-left: 1px; padding-right: 1px; margin-top: 2px; font-size: 25%;" />
+                <ui:VisualElement style="background-color: rgb(88, 88, 88); left: auto; top: 2px; height: 100%; width: 20%; right: auto; justify-content: center; align-items: flex-start; border-top-left-radius: 3px; border-bottom-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px;">
+                    <ui:Label text="Cost" display-tooltip-when-elided="true" name="strPicCost" style="justify-content: flex-end; align-items: center; padding-left: 5px; font-size: 25px;" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement style="width: 100%; flex-direction: row; align-items: stretch; background-color: rgb(48, 48, 48); -unity-background-image-tint-color: rgb(196, 196, 196); height: 5%; margin-bottom: 5px;">
+                <ui:VisualElement style="background-color: rgb(88, 88, 88); left: 2px; top: 2px; height: 100%; width: 10%; right: 2px; align-items: center; justify-content: center; border-left-width: 0; border-right-width: 0; border-top-width: 0; border-bottom-width: 0; border-left-color: rgb(56, 56, 56); border-right-color: rgb(56, 56, 56); border-top-color: rgb(56, 56, 56); border-bottom-color: rgb(56, 56, 56); border-top-left-radius: 3px; border-bottom-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px;">
+                    <ui:Label text="Num" display-tooltip-when-elided="true" name="denCubNum" style="justify-content: flex-end; align-items: center; font-size: 25%;" />
+                </ui:VisualElement>
+                <ui:Button text="Denser Cube" display-tooltip-when-elided="true" name="denCubButton" style="height: 100%; width: 70%; align-items: auto; border-left-width: 0; border-right-width: 0; border-top-width: 0; border-bottom-width: 0; margin-left: 5px; margin-right: 3px; padding-left: 1px; padding-right: 1px; margin-top: 2px; font-size: 25%;" />
+                <ui:VisualElement style="background-color: rgb(88, 88, 88); left: auto; top: 2px; height: 100%; width: 20%; right: auto; justify-content: center; align-items: flex-start; border-top-left-radius: 3px; border-bottom-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px;">
+                    <ui:Label text="Cost" display-tooltip-when-elided="true" name="denCubCost" style="justify-content: flex-end; align-items: center; padding-left: 5px; font-size: 25px;" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement style="width: 100%; flex-direction: row; align-items: stretch; background-color: rgb(48, 48, 48); -unity-background-image-tint-color: rgb(196, 196, 196); height: 5%; margin-bottom: 5px;">
+                <ui:VisualElement style="background-color: rgb(88, 88, 88); left: 2px; top: 2px; height: 100%; width: 10%; right: 2px; align-items: center; justify-content: center; border-left-width: 0; border-right-width: 0; border-top-width: 0; border-bottom-width: 0; border-left-color: rgb(56, 56, 56); border-right-color: rgb(56, 56, 56); border-top-color: rgb(56, 56, 56); border-bottom-color: rgb(56, 56, 56); border-top-left-radius: 3px; border-bottom-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px;">
+                    <ui:Label text="Num" display-tooltip-when-elided="true" name="morCrtNum" style="justify-content: flex-end; align-items: center; font-size: 25%;" />
+                </ui:VisualElement>
+                <ui:Button text="More Crits" display-tooltip-when-elided="true" name="morCrtButton" style="height: 100%; width: 70%; align-items: auto; border-left-width: 0; border-right-width: 0; border-top-width: 0; border-bottom-width: 0; margin-left: 5px; margin-right: 3px; padding-left: 1px; padding-right: 1px; margin-top: 2px; font-size: 25%;" />
+                <ui:VisualElement style="background-color: rgb(88, 88, 88); left: auto; top: 2px; height: 100%; width: 20%; right: auto; justify-content: center; align-items: flex-start; border-top-left-radius: 3px; border-bottom-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px;">
+                    <ui:Label text="Cost" display-tooltip-when-elided="true" name="morCrtCost" style="justify-content: flex-end; align-items: center; padding-left: 5px; font-size: 25px;" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement style="width: 100%; flex-direction: row; align-items: stretch; background-color: rgb(48, 48, 48); -unity-background-image-tint-color: rgb(196, 196, 196); height: 5%; margin-bottom: 5px;">
+                <ui:VisualElement style="background-color: rgb(88, 88, 88); left: 2px; top: 2px; height: 100%; width: 10%; right: 2px; align-items: center; justify-content: center; border-left-width: 0; border-right-width: 0; border-top-width: 0; border-bottom-width: 0; border-left-color: rgb(56, 56, 56); border-right-color: rgb(56, 56, 56); border-top-color: rgb(56, 56, 56); border-bottom-color: rgb(56, 56, 56); border-top-left-radius: 3px; border-bottom-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px;">
+                    <ui:Label text="Num" display-tooltip-when-elided="true" name="strCrtNum" style="justify-content: flex-end; align-items: center; font-size: 25%;" />
+                </ui:VisualElement>
+                <ui:Button text="Stronger Crits" display-tooltip-when-elided="true" name="strCrtButton" style="height: 100%; width: 70%; align-items: auto; border-left-width: 0; border-right-width: 0; border-top-width: 0; border-bottom-width: 0; margin-left: 5px; margin-right: 3px; padding-left: 1px; padding-right: 1px; margin-top: 2px; font-size: 25%;" />
+                <ui:VisualElement style="background-color: rgb(88, 88, 88); left: auto; top: 2px; height: 100%; width: 20%; right: auto; justify-content: center; align-items: flex-start; border-top-left-radius: 3px; border-bottom-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px;">
+                    <ui:Label text="Cost" display-tooltip-when-elided="true" name="strCrtCost" style="justify-content: flex-end; align-items: center; padding-left: 5px; font-size: 25px;" />
                 </ui:VisualElement>
             </ui:VisualElement>
         </ui:VisualElement>
-        <ui:VisualElement style="align-items: center; width: 100%; height: 20%; transform-origin: bottom; translate: 0 0; background-color: rgb(36, 36, 36); flex-grow: 0; justify-content: flex-start; flex-direction: row;">
-            <ui:IMGUIContainer style="background-image: url(&apos;project://database/Assets/Sprites/Ice%20Cubes/iceCube.png?fileID=2800000&amp;guid=de364873f9e408c49a8653aede0e1b26&amp;type=3#iceCube&apos;); height: 56px; width: 56px; justify-content: center;" />
-            <ui:Label text="IceCount" display-tooltip-when-elided="true" style="height: 45px; width: 43px;" />
+        <ui:VisualElement style="align-items: center; width: 100%; height: 10%; transform-origin: bottom; translate: 0 0; background-color: rgb(36, 36, 36); flex-grow: 0; justify-content: flex-start; flex-direction: row;">
+            <ui:IMGUIContainer style="background-image: url(&apos;project://database/Assets/Sprites/Ice%20Cubes/iceCube.png?fileID=2800000&amp;guid=de364873f9e408c49a8653aede0e1b26&amp;type=3#iceCube&apos;); height: 75%; width: 4%; justify-content: center;" />
+            <ui:Label text="IceCount" display-tooltip-when-elided="true" name="iceCount" style="height: 45%; width: 3%; -unity-text-align: middle-left; font-size: 25%;" />
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

@@ -272,7 +272,7 @@ GameObject:
   - component: {fileID: 870300175}
   m_Layer: 0
   m_Name: Ice Cube
-  m_TagString: Untagged
+  m_TagString: iceCube
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -403,6 +403,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   iceCube: {fileID: 870300173}
+  uiManager: {fileID: 1351389383}
   denserCubesLvl: 0
   strongerPickLvl: 0
   efficientMiningLvl: 0
@@ -430,7 +431,7 @@ GameObject:
   - component: {fileID: 1351389383}
   m_Layer: 5
   m_Name: Canvas
-  m_TagString: Untagged
+  m_TagString: canvas
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
