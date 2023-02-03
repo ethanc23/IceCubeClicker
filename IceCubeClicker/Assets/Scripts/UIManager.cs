@@ -7,6 +7,7 @@ using UnityEngine.UIElements;
 public class UIManager : MonoBehaviour
 {
     [SerializeField] private Upgrades upgrades;
+    [SerializeField] private Pickaxe pickaxe;
 
     private Label iceCount;
 
@@ -27,6 +28,8 @@ public class UIManager : MonoBehaviour
     public Button denCubButton;
     public Button morCrtButton;
     public Button strCrtButton;
+
+    public Button pickaxeButton;
 
     // Start is called before the first frame update
     void Start()
@@ -53,11 +56,15 @@ public class UIManager : MonoBehaviour
         morCrtButton = root.Q<Button>("morCrtButton");
         strCrtButton = root.Q<Button>("strCrtButton");
 
+        pickaxeButton = root.Q<Button>("pickaxeButton");
+
         effMinButton.clicked += upgrades.efficientMining;
         strPicButton.clicked += upgrades.strongerPick;
         denCubButton.clicked += upgrades.denserCubes;
         morCrtButton.clicked += upgrades.critMineChance;
         strCrtButton.clicked += upgrades.critMineDamage;
+
+        pickaxeButton.clicked += pickaxe.onClick;
     }
 
     // Update is called once per frame

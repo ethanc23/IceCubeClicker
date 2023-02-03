@@ -22,7 +22,7 @@ public class Pickaxe : MonoBehaviour
         
     }
 
-    void onClick()
+    public void onClick()
     {
 
     }
