@@ -45,45 +45,40 @@ public class IceCube : MonoBehaviour
         ctrl.Default.LeftClick.performed -= Click;
     }
 
-    private void Click(InputAction.CallbackContext context)
+    public void Click(InputAction.CallbackContext context)
     {
-        Vector2 mousePos = ctrl.Default.MousePos.ReadValue<Vector2>();
-        Debug.Log(mousePos);
-        if (bounds.Contains(mousePos))
+        if (GameManager.Instance.critChance > Random.Range(0f, 100f))
         {
-            if(GameManager.Instance.critChance > Random.Range(0f, 100f))
-            {
-                hp -= (int)(GameManager.Instance.pickPower * GameManager.Instance.critDamage);
-            }
-            else
-            {
-                hp -= GameManager.Instance.pickPower;
-            }
-            
-            //Debug.Log(hp);
-            //StartCoroutine(Shake());
-            //Debug.Log("coroutine started");
-            float hpThreshhold = (float)maxHp / 3f;
-            if (hp <= 0)
-            {
-                GameManager.Instance.ice += GameManager.Instance.iceMultiplier * GameManager.Instance.bonusIce;
-                hp = maxHp;
-                spriteRenderer.sprite = iceCubeSprites[0];
-            }
-            else if ((float)hp < hpThreshhold)
-            {
-                spriteRenderer.sprite = iceCubeSprites[3];
-            }
-            else if ((float)hp < hpThreshhold * 2f)
-            {
-                spriteRenderer.sprite = iceCubeSprites[2];
-            }
-            else if ((float)hp < hpThreshhold * 3f)
-            {
-                spriteRenderer.sprite = iceCubeSprites[1];
-            }
+            hp -= (int)(GameManager.Instance.pickPower * GameManager.Instance.critDamage);
         }
-        
+        else
+        {
+            hp -= GameManager.Instance.pickPower;
+        }
+
+        //Debug.Log(hp);
+        //StartCoroutine(Shake());
+        //Debug.Log("coroutine started");
+        float hpThreshhold = (float)maxHp / 3f;
+        if (hp <= 0)
+        {
+            GameManager.Instance.ice += GameManager.Instance.iceMultiplier * GameManager.Instance.bonusIce;
+            hp = maxHp;
+            spriteRenderer.sprite = iceCubeSprites[0];
+        }
+        else if ((float)hp < hpThreshhold)
+        {
+            spriteRenderer.sprite = iceCubeSprites[3];
+        }
+        else if ((float)hp < hpThreshhold * 2f)
+        {
+            spriteRenderer.sprite = iceCubeSprites[2];
+        }
+        else if ((float)hp < hpThreshhold * 3f)
+        {
+            spriteRenderer.sprite = iceCubeSprites[1];
+        }
+
     }
 
     void Update()
