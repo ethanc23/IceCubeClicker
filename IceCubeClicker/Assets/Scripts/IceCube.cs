@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.EventSystems;
+using Unity.VisualScripting;
 
 public class IceCube : MonoBehaviour
 {
-    private Rect bounds = new Rect(8, 128, 128, 256);
+    private float shakeStartTime;
 
     public int maxHp;
     public int hp;
@@ -25,6 +26,7 @@ public class IceCube : MonoBehaviour
         maxHp = 5;
         hp = maxHp;
         shaking = false;
+        shakeStartTime = 0f;
     }
 
     void Awake()
@@ -47,54 +49,66 @@ public class IceCube : MonoBehaviour
 
     public void Click(InputAction.CallbackContext context)
     {
-        if (GameManager.Instance.critChance > Random.Range(0f, 100f))
+        
+        Ray ray = Camera.main.ScreenPointToRay(ctrl.Default.MousePos.ReadValue<Vector2>());
+        RaycastHit2D hit = Physics2D.GetRayIntersection(ray);
+        if (hit.collider != null)
         {
-            hp -= (int)(GameManager.Instance.pickPower * GameManager.Instance.critDamage);
-        }
-        else
-        {
-            hp -= GameManager.Instance.pickPower;
-        }
+            if (GameManager.Instance.critChance > Random.Range(0f, 100f))
+            {
+                hp -= (int)(GameManager.Instance.pickPower * GameManager.Instance.critDamage);
+            }
+            else
+            {
+                hp -= GameManager.Instance.pickPower;
+            }
 
-        //Debug.Log(hp);
-        //StartCoroutine(Shake());
-        //Debug.Log("coroutine started");
-        float hpThreshhold = (float)maxHp / 3f;
-        if (hp <= 0)
-        {
-            GameManager.Instance.ice += GameManager.Instance.iceMultiplier * GameManager.Instance.bonusIce;
-            hp = maxHp;
-            spriteRenderer.sprite = iceCubeSprites[0];
-        }
-        else if ((float)hp < hpThreshhold)
-        {
-            spriteRenderer.sprite = iceCubeSprites[3];
-        }
-        else if ((float)hp < hpThreshhold * 2f)
-        {
-            spriteRenderer.sprite = iceCubeSprites[2];
-        }
-        else if ((float)hp < hpThreshhold * 3f)
-        {
-            spriteRenderer.sprite = iceCubeSprites[1];
-        }
+            StartCoroutine(Shake());
 
+            float hpThreshhold = (float)maxHp / 3f;
+            if (hp <= 0)
+            {
+                GameManager.Instance.ice += GameManager.Instance.iceMultiplier * GameManager.Instance.bonusIce;
+                hp = maxHp;
+                spriteRenderer.sprite = iceCubeSprites[0];
+            }
+            else if ((float)hp < hpThreshhold)
+            {
+                spriteRenderer.sprite = iceCubeSprites[3];
+            }
+            else if ((float)hp < hpThreshhold * 2f)
+            {
+                spriteRenderer.sprite = iceCubeSprites[2];
+            }
+            else if ((float)hp < hpThreshhold * 3f)
+            {
+                spriteRenderer.sprite = iceCubeSprites[1];
+            }
+        }
     }
 
     void Update()
     {
-        while (shaking)
+        if (shaking)
         {
-            this.gameObject.transform.position = new Vector2(Mathf.Sin(Time.time * 1.0f) * 1.0f, this.gameObject.transform.position.y);
+            this.gameObject.transform.position = new Vector2(Mathf.Sin(Time.time - shakeStartTime) * 0.15f, this.gameObject.transform.position.y);
         }
     }
 
     IEnumerator Shake()
     {
-        shaking = true;
-        Debug.Log("shaking");
-        yield return new WaitForSeconds(1);
-        Debug.Log("shaken");
+        Vector2 initialPos = transform.position;
+
+        shakeStartTime = Time.time;
+
+        if (shaking == false)
+        {
+            shaking = true;
+        }
+
+        yield return new WaitForSeconds(0.25f);
+
         shaking = false;
+        transform.position = initialPos;
     }
 }
