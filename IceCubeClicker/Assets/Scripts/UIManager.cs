@@ -81,7 +81,7 @@ public class UIManager : MonoBehaviour
         effMinCost.text = upgrades.efficientMiningCost.ToString();
         strPicCost.text = upgrades.strongerPickCost.ToString();
         denCubCost.text = upgrades.denserCubesCost.ToString();
-        morCrtCost.text = upgrades.critMineDamageCost.ToString();
+        morCrtCost.text = upgrades.critMineChanceCost.ToString();
         strCrtCost.text = upgrades.critMineDamageCost.ToString();
 
     }

@@ -91,7 +91,7 @@ public class IceCube : MonoBehaviour
     {
         if (shaking)
         {
-            this.gameObject.transform.position = new Vector2(Mathf.Sin((Time.time - shakeStartTime) * 25f) * 0.5f, this.gameObject.transform.position.y);
+            this.gameObject.transform.position = new Vector2(Mathf.Sin((Time.time - shakeStartTime) * 30f) * 0.2f, this.gameObject.transform.position.y);
         }
     }
 
@@ -106,7 +106,7 @@ public class IceCube : MonoBehaviour
             shaking = true;
         }
 
-        yield return new WaitForSeconds(0.35f);
+        yield return new WaitForSeconds(0.25f);
 
         shaking = false;
         transform.position = initialPos;
