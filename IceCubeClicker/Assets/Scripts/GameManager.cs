@@ -9,6 +9,8 @@ public class GameManager : MonoBehaviour
 
     public int ice;
 
+    public int currentPickaxe;
+
     public int pickPower;
     public int iceMultiplier;
     public int bonusIce;
@@ -31,6 +33,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         ice = 0;
+        currentPickaxe = 3;
         pickPower = 1;
         bonusIce = 1;
         iceMultiplier = 1;
