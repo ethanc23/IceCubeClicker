@@ -1,9 +1,12 @@
 using System.Collections;
+using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
+using System.Linq;
+using Unity.VisualScripting.FullSerializer;
 
 public class UIManager : MonoBehaviour
 {
@@ -36,19 +39,14 @@ public class UIManager : MonoBehaviour
     private Button pickaxeButton;
     private VisualElement pickaxeImage;
 
+    IDictionary<int, Button> pickSelect = new Dictionary<int, Button>();
+
     private Button stonePickBuy;
     private Button copperPickBuy;
     private Button bronzePickBuy;
     private Button ironPickBuy;
     private Button steelPickBuy;
     private Button titaniumPickBuy;
-
-    private Button stonePickSelect;
-    private Button copperPickSelect;
-    private Button bronzePickSelect;
-    private Button ironPickSelect;
-    private Button steelPickSelect;
-    private Button titaniumPickSelect;
 
     private bool pickaxeWindowActive;
 
@@ -72,7 +70,7 @@ public class UIManager : MonoBehaviour
         var root = GetComponent<UIDocument>().rootVisualElement;
 
         pickaxeWindow = root.Q<VisualElement>("pickaxeWindow");
-
+        
         iceCount = root.Q<Label>("iceCount");
 
         effMinNum = root.Q<Label>("effMinNum");
@@ -103,12 +101,12 @@ public class UIManager : MonoBehaviour
         steelPickBuy = root.Q<Button>("steelPickBuy");
         titaniumPickBuy = root.Q<Button>("titaniumPickBuy");
 
-        stonePickSelect = root.Q<Button>("stonePickSelect");
-        copperPickSelect = root.Q<Button>("copperPickSelect");
-        bronzePickSelect = root.Q<Button>("bronzePickSelect");
-        ironPickSelect = root.Q<Button>("ironPickSelect");
-        steelPickSelect = root.Q<Button>("steelPickSelect");
-        titaniumPickSelect = root.Q<Button>("titaniumPickSelect");
+        pickSelect[1] = root.Q<Button>("stonePickSelect");
+        pickSelect[2] = root.Q<Button>("copperPickSelect");
+        pickSelect[3] = root.Q<Button>("bronzePickSelect");
+        pickSelect[4] = root.Q<Button>("ironPickSelect");
+        pickSelect[5] = root.Q<Button>("steelPickSelect");
+        pickSelect[6] = root.Q<Button>("titaniumPickSelect");
 
         effMinButton.clicked += upgrades.efficientMining;
         strPicButton.clicked += upgrades.strongerPick;
@@ -125,22 +123,22 @@ public class UIManager : MonoBehaviour
         steelPickBuy.clicked += SteelPickBuy;
         titaniumPickBuy.clicked += TitaniumPickBuy;
 
-        stonePickSelect.clicked += StonePickSelect;
-        copperPickSelect.clicked += CopperPickSelect;
-        bronzePickSelect.clicked += BronzePickSelect;
-        ironPickSelect.clicked += IronPickSelect;
-        steelPickSelect.clicked += SteelPickSelect;
-        titaniumPickSelect.clicked += TitaniumPickSelect;
+        pickSelect[1].clicked += StonePickSelect;
+        pickSelect[2].clicked += CopperPickSelect;
+        pickSelect[3].clicked += BronzePickSelect;
+        pickSelect[4].clicked += IronPickSelect;
+        pickSelect[5].clicked += SteelPickSelect;
+        pickSelect[6].clicked += TitaniumPickSelect;
 
         pickaxeWindow.visible = false;
         pickaxeWindowActive = false;
 
-        stonePickCost = 0;
-        copperPickCost = 0;
-        bronzePickCost = 0;
-        ironPickCost = 0;
-        steelPickCost = 0;
-        titaniumPickCost = 0;
+        stonePickCost = 50;
+        copperPickCost = 200;
+        bronzePickCost = 1000;
+        ironPickCost = 5000;
+        steelPickCost = 10000;
+        titaniumPickCost = 1000000;
 
         stonePickOwned = false;
         copperPickOwned = false;
@@ -149,7 +147,35 @@ public class UIManager : MonoBehaviour
         steelPickOwned = false;
         titaniumPickOwned = false;
 
+        stonePickBuy.text = stonePickCost.ToString();
+        copperPickBuy.text = copperPickCost.ToString();
+        bronzePickBuy.text = bronzePickCost.ToString();
+        ironPickBuy.text = ironPickCost.ToString();
+        steelPickBuy.text = steelPickCost.ToString();
+        titaniumPickBuy.text = titaniumPickCost.ToString();
     }
+
+    private void pickBorder(int pick)
+    {
+        foreach (KeyValuePair<int, Button> pair in pickSelect)
+        {
+            if (pair.Key == pick)
+            {
+                pickSelect[pair.Key].style.borderLeftWidth = 3;
+                pickSelect[pair.Key].style.borderRightWidth = 3;
+                pickSelect[pair.Key].style.borderBottomWidth = 3;
+                pickSelect[pair.Key].style.borderTopWidth = 3;
+            }
+            else
+            {
+                pickSelect[pair.Key].style.borderLeftWidth = 0;
+                pickSelect[pair.Key].style.borderRightWidth = 0;
+                pickSelect[pair.Key].style.borderBottomWidth = 0;
+                pickSelect[pair.Key].style.borderTopWidth = 0;
+            }
+        }
+    }
+
     private void PickaxeWindow()
     {
         if (pickaxeWindowActive == false)
@@ -166,55 +192,73 @@ public class UIManager : MonoBehaviour
 
     private void StonePickBuy()
     {
-        if (GameManager.Instance.ice > stonePickCost)
+        if (GameManager.Instance.ice >= stonePickCost)
         {
+            GameManager.Instance.ice -= stonePickCost;
             stonePickOwned = true;
-            GameManager.Instance.currentPickaxe = 1;
+            StonePickSelect();
+            pickSelect[1].style.backgroundColor = new Color(0.15f, 0.15f, 0.15f);
+            stonePickBuy.text = "Owned";
         }
     }
 
     private void CopperPickBuy()
     {
-        if (GameManager.Instance.ice > copperPickCost)
+        if (GameManager.Instance.ice >= copperPickCost)
         {
+            GameManager.Instance.ice -= copperPickCost;
             copperPickOwned = true;
-            GameManager.Instance.currentPickaxe = 2;
+            CopperPickSelect();
+            pickSelect[2].style.backgroundColor = new Color(0.15f, 0.15f, 0.15f);
+            copperPickBuy.text = "Owned";
         }
     }
 
     private void BronzePickBuy()
     {
-        if (GameManager.Instance.ice > bronzePickCost)
+        if (GameManager.Instance.ice >= bronzePickCost)
         {
+            GameManager.Instance.ice -= bronzePickCost;
             bronzePickOwned = true;
-            GameManager.Instance.currentPickaxe = 3;
+            BronzePickSelect();
+            pickSelect[3].style.backgroundColor = new Color(0.15f, 0.15f, 0.15f);
+            bronzePickBuy.text = "Owned";
         }
     }
 
     private void IronPickBuy()
     {
-        if (GameManager.Instance.ice > ironPickCost)
+        if (GameManager.Instance.ice >= ironPickCost)
         {
+            GameManager.Instance.ice -= ironPickCost;
             ironPickOwned = true;
-            GameManager.Instance.currentPickaxe = 4;
+            IronPickSelect();
+            pickSelect[4].style.backgroundColor = new Color(0.15f, 0.15f, 0.15f);
+            ironPickBuy.text = "Owned";
         }
     }
 
     private void SteelPickBuy()
     {
-        if (GameManager.Instance.ice > steelPickCost)
+        if (GameManager.Instance.ice >= steelPickCost)
         {
+            GameManager.Instance.ice -= steelPickCost;
             steelPickOwned = true;
-            GameManager.Instance.currentPickaxe = 5;
+            SteelPickSelect();
+            pickSelect[5].style.backgroundColor = new Color(0.15f, 0.15f, 0.15f);
+            steelPickBuy.text = "Owned";
         }
     }
 
     private void TitaniumPickBuy()
     {
-        if (GameManager.Instance.ice > titaniumPickCost)
+        if (GameManager.Instance.ice >= titaniumPickCost)
         {
+            GameManager.Instance.ice -= titaniumPickCost;
             titaniumPickOwned = true;
-            GameManager.Instance.currentPickaxe = 6;
+            TitaniumPickSelect();
+            pickSelect[6].style.backgroundColor = new Color(0.15f, 0.15f, 0.15f);
+            titaniumPickBuy.text = "Owned";
         }
     }
     private void StonePickSelect()
@@ -222,6 +266,8 @@ public class UIManager : MonoBehaviour
         if (stonePickOwned == true)
         {
             GameManager.Instance.currentPickaxe = 1;
+            GameManager.Instance.basePickPower = GameManager.Instance.pickaxePowers[1];
+            pickBorder(1);
         }
     }
 
@@ -230,6 +276,8 @@ public class UIManager : MonoBehaviour
         if (copperPickOwned == true)
         {
             GameManager.Instance.currentPickaxe = 2;
+            GameManager.Instance.basePickPower = GameManager.Instance.pickaxePowers[2];
+            pickBorder(2);
         }
     }
 
@@ -238,6 +286,8 @@ public class UIManager : MonoBehaviour
         if (bronzePickOwned == true)
         {
             GameManager.Instance.currentPickaxe = 3;
+            GameManager.Instance.basePickPower = GameManager.Instance.pickaxePowers[3];
+            pickBorder(3);
         }
     }
 
@@ -246,6 +296,8 @@ public class UIManager : MonoBehaviour
         if (ironPickOwned == true)
         {
             GameManager.Instance.currentPickaxe = 4;
+            GameManager.Instance.basePickPower = GameManager.Instance.pickaxePowers[4];
+            pickBorder(4);
         }
     }
 
@@ -254,6 +306,8 @@ public class UIManager : MonoBehaviour
         if (steelPickOwned == true)
         {
             GameManager.Instance.currentPickaxe = 5;
+            GameManager.Instance.basePickPower = GameManager.Instance.pickaxePowers[5];
+            pickBorder(5);
         }
     }
 
@@ -262,6 +316,8 @@ public class UIManager : MonoBehaviour
         if (titaniumPickOwned == true)
         {
             GameManager.Instance.currentPickaxe = 6;
+            GameManager.Instance.basePickPower = GameManager.Instance.pickaxePowers[6];
+            pickBorder(6);
         }
     }
 
@@ -282,14 +338,6 @@ public class UIManager : MonoBehaviour
         morCrtCost.text = upgrades.critMineChanceCost.ToString();
         strCrtCost.text = upgrades.critMineDamageCost.ToString();
 
-        pickaxeImage.style.backgroundImage = new StyleBackground(pickaxeSprites[GameManager.Instance.currentPickaxe]);
-
-        stonePickBuy.text = stonePickCost.ToString();
-        copperPickBuy.text = copperPickCost.ToString();
-        bronzePickBuy.text = bronzePickCost.ToString();
-        ironPickBuy.text = ironPickCost.ToString();
-        steelPickBuy.text = steelPickCost.ToString();
-        titaniumPickBuy.text = titaniumPickCost.ToString();
-           
+        pickaxeImage.style.backgroundImage = new StyleBackground(pickaxeSprites[GameManager.Instance.currentPickaxe]);           
     }
 }

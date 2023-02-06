@@ -56,11 +56,11 @@ public class IceCube : MonoBehaviour
         {
             if (GameManager.Instance.critChance > Random.Range(0f, 100f))
             {
-                hp -= (int)(GameManager.Instance.pickPower * GameManager.Instance.critDamage);
+                hp -= (int)((GameManager.Instance.basePickPower + GameManager.Instance.pickPower) * GameManager.Instance.critDamage);
             }
             else
             {
-                hp -= GameManager.Instance.pickPower;
+                hp -= GameManager.Instance.basePickPower + GameManager.Instance.pickPower;
             }
 
             StartCoroutine(Shake());

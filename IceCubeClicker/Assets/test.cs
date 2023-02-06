@@ -2,14 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Pickaxe : MonoBehaviour
+public class test : MonoBehaviour
 {
-
-    [SerializeField] private SpriteRenderer spriteRenderer;
-
-    [SerializeField] private Sprite[] pickaxeSprites;
-
-
     // Start is called before the first frame update
     void Start()
     {
@@ -20,10 +14,5 @@ public class Pickaxe : MonoBehaviour
     void Update()
     {
         
-    }
-
-    public void onClick()
-    {
-
     }
 }

@@ -11,6 +11,8 @@ public class GameManager : MonoBehaviour
 
     public int currentPickaxe;
 
+    public int basePickPower;
+    public IDictionary<int, int> pickaxePowers = new Dictionary<int, int>();
     public int pickPower;
     public int iceMultiplier;
     public int bonusIce;
@@ -33,12 +35,20 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         ice = 0;
-        currentPickaxe = 3;
-        pickPower = 1;
+        currentPickaxe = 0;
+        basePickPower = 1;
+        pickPower = 0;
         bonusIce = 1;
         iceMultiplier = 1;
         critChance = 0f;
         critDamage = 100f;
+
+        pickaxePowers[1] = 5;
+        pickaxePowers[2] = 10;
+        pickaxePowers[3] = 25;
+        pickaxePowers[4] = 100;
+        pickaxePowers[5] = 250;
+        pickaxePowers[6] = 2000;
     }
 
     // Update is called once per frame
