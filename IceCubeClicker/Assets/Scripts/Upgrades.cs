@@ -13,14 +13,16 @@ public class Upgrades : MonoBehaviour
     public int efficientMiningLvl;
     public int critMineChanceLvl;
     public int critMineDamageLvl;
-    int minerLvl;
 
     public int denserCubesCost;
     public int strongerPickCost;
     public int efficientMiningCost;
     public int critMineChanceCost;
     public int critMineDamageCost;
-    int minerCost;
+
+    public int autoMinerLvl;
+
+    public int autoMinerCost;
 
     // Start is called before the first frame update
     void Start()
@@ -36,6 +38,9 @@ public class Upgrades : MonoBehaviour
         efficientMiningCost = 10;
         critMineChanceCost = 100;
         critMineDamageCost = 100;
+
+        autoMinerLvl = 1;
+        autoMinerCost = 450;
     }
 
     public void strongerPick()
@@ -93,6 +98,17 @@ public class Upgrades : MonoBehaviour
             GameManager.Instance.critDamage += 0.1f;
             critMineDamageLvl++;
             critMineDamageCost = 100 + (int)Mathf.Floor(50 * Mathf.Pow(critMineDamageLvl, 1.5f));
+        }
+    }
+
+    public void autoMiner()
+    {
+        if (GameManager.Instance.ice >= autoMinerCost)
+        {
+            GameManager.Instance.ice -= autoMinerCost;
+            GameManager.Instance.autoMineDamage += 2;
+            autoMinerLvl++;
+            autoMinerCost = 450 + 75 * autoMinerLvl;
         }
     }
 }

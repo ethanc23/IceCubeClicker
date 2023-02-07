@@ -19,6 +19,8 @@ public class GameManager : MonoBehaviour
     public float critChance;
     public float critDamage;
 
+    public int autoMineDamage;
+
     void Awake()
     {
         if (Instance != null && Instance != this)
@@ -49,10 +51,13 @@ public class GameManager : MonoBehaviour
         pickaxePowers[4] = 100;
         pickaxePowers[5] = 250;
         pickaxePowers[6] = 2000;
+
+        autoMineDamage = 2;
     }
 
     // Update is called once per frame
     void Update()
     {
+
     }
 }

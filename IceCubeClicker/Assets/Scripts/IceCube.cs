@@ -29,10 +29,16 @@ public class IceCube : MonoBehaviour
         shakeStartTime = 0f;
     }
 
+    private void AutoMine()
+    {
+        hp -= GameManager.Instance.autoMineDamage;
+    }
+
     void Awake()
     {
         ctrl = new Controls();
         spriteRenderer.sprite = iceCubeSprites[0];
+        InvokeRepeating("AutoMine", 1f, 1f);
     }
 
     private void OnEnable()

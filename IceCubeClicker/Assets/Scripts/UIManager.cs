@@ -18,6 +18,12 @@ public class UIManager : MonoBehaviour
 
     private Label iceCount;
 
+    private VisualElement clickUpgradesWindow;
+    private VisualElement idleUpgradesWindow;
+
+    private Button clickUpgradesButton;
+    private Button idleUpgradesButton;
+
     private Label effMinNum;
     private Label strPicNum;
     private Label denCubNum;
@@ -48,8 +54,6 @@ public class UIManager : MonoBehaviour
     private Button steelPickBuy;
     private Button titaniumPickBuy;
 
-    private bool pickaxeWindowActive;
-
     private int stonePickCost;
     private int copperPickCost;
     private int bronzePickCost;
@@ -72,6 +76,12 @@ public class UIManager : MonoBehaviour
         pickaxeWindow = root.Q<VisualElement>("pickaxeWindow");
         
         iceCount = root.Q<Label>("iceCount");
+
+        clickUpgradesWindow = root.Q<VisualElement>("clickUpgradesWindow");
+        idleUpgradesWindow = root.Q<VisualElement>("idleUpgradesWindow");
+
+        clickUpgradesButton = root.Q<Button>("clickUpgradesButton");
+        idleUpgradesButton = root.Q<Button>("idleUpgradesButton");
 
         effMinNum = root.Q<Label>("effMinNum");
         strPicNum = root.Q<Label>("strPicNum");
@@ -108,6 +118,9 @@ public class UIManager : MonoBehaviour
         pickSelect[5] = root.Q<Button>("steelPickSelect");
         pickSelect[6] = root.Q<Button>("titaniumPickSelect");
 
+        clickUpgradesButton.clicked += ClickUpgradeWindow;
+        idleUpgradesButton.clicked += IdleUpgradeWindow;
+
         effMinButton.clicked += upgrades.efficientMining;
         strPicButton.clicked += upgrades.strongerPick;
         denCubButton.clicked += upgrades.denserCubes;
@@ -130,8 +143,9 @@ public class UIManager : MonoBehaviour
         pickSelect[5].clicked += SteelPickSelect;
         pickSelect[6].clicked += TitaniumPickSelect;
 
+        clickUpgradesWindow.visible = false;
+        idleUpgradesWindow.visible = false;
         pickaxeWindow.visible = false;
-        pickaxeWindowActive = false;
 
         stonePickCost = 50;
         copperPickCost = 200;
@@ -153,6 +167,30 @@ public class UIManager : MonoBehaviour
         ironPickBuy.text = ironPickCost.ToString();
         steelPickBuy.text = steelPickCost.ToString();
         titaniumPickBuy.text = titaniumPickCost.ToString();
+    }
+
+    private void ClickUpgradeWindow()
+    {
+        if (clickUpgradesWindow.visible == false)
+        {
+            clickUpgradesWindow.visible = true;
+        } 
+        else if (clickUpgradesWindow.visible == true)
+        {
+            clickUpgradesWindow.visible = false;
+        }
+    }
+
+    private void IdleUpgradeWindow()
+    {
+        if (idleUpgradesWindow.visible == false)
+        {
+            idleUpgradesWindow.visible = true;
+        }
+        else if (idleUpgradesWindow.visible == true)
+        {
+            idleUpgradesWindow.visible = false;
+        }
     }
 
     private void pickBorder(int pick)
@@ -178,15 +216,13 @@ public class UIManager : MonoBehaviour
 
     private void PickaxeWindow()
     {
-        if (pickaxeWindowActive == false)
+        if (pickaxeWindow.visible == false)
         {
             pickaxeWindow.visible = true;
-            pickaxeWindowActive = true;
         } 
-        else if (pickaxeWindowActive == true)
+        else if (pickaxeWindow.visible == true)
         {
             pickaxeWindow.visible = false;
-            pickaxeWindowActive = false;
         }
     }
 
