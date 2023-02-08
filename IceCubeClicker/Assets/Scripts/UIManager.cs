@@ -30,17 +30,23 @@ public class UIManager : MonoBehaviour
     private Label morCrtNum;
     private Label strCrtNum;
 
+    private Label autMinNum;
+
     private Label effMinCost;
     private Label strPicCost;
     private Label denCubCost;
     private Label morCrtCost;
     private Label strCrtCost;
 
-    public Button effMinButton;
-    public Button strPicButton;
-    public Button denCubButton;
-    public Button morCrtButton;
-    public Button strCrtButton;
+    private Label autMinCost;
+
+    private Button effMinButton;
+    private Button strPicButton;
+    private Button denCubButton;
+    private Button morCrtButton;
+    private Button strCrtButton;
+
+    private Button autMinButton; 
 
     private Button pickaxeButton;
     private VisualElement pickaxeImage;
@@ -89,17 +95,23 @@ public class UIManager : MonoBehaviour
         morCrtNum = root.Q<Label>("morCrtNum");
         strCrtNum = root.Q<Label>("strCrtNum");
 
+        autMinNum = root.Q<Label>("autMinNum");
+
         effMinCost = root.Q<Label>("effMinCost");
         strPicCost = root.Q<Label>("strPicCost");
         denCubCost = root.Q<Label>("denCubCost");
         morCrtCost = root.Q<Label>("morCrtCost");
         strCrtCost = root.Q<Label>("strCrtCost");
 
+        autMinCost = root.Q<Label>("autMinCost");
+
         effMinButton = root.Q<Button>("effMinButton");
         strPicButton = root.Q<Button>("strPicButton");
         denCubButton = root.Q<Button>("denCubButton");
         morCrtButton = root.Q<Button>("morCrtButton");
         strCrtButton = root.Q<Button>("strCrtButton");
+
+        autMinButton = root.Q<Button>("autMinButton");
 
         pickaxeButton = root.Q<Button>("pickaxeButton");
         pickaxeImage = pickaxeButton.ElementAt(0);
@@ -126,6 +138,8 @@ public class UIManager : MonoBehaviour
         denCubButton.clicked += upgrades.denserCubes;
         morCrtButton.clicked += upgrades.critMineChance;
         strCrtButton.clicked += upgrades.critMineDamage;
+
+        autMinButton.clicked += upgrades.autoMiner;
 
         pickaxeButton.clicked += PickaxeWindow;
 
@@ -368,11 +382,15 @@ public class UIManager : MonoBehaviour
         morCrtNum.text = upgrades.critMineChanceLvl.ToString();
         strCrtNum.text = upgrades.critMineDamageLvl.ToString();
 
+        autMinNum.text = upgrades.autoMinerLvl.ToString();
+
         effMinCost.text = upgrades.efficientMiningCost.ToString();
         strPicCost.text = upgrades.strongerPickCost.ToString();
         denCubCost.text = upgrades.denserCubesCost.ToString();
         morCrtCost.text = upgrades.critMineChanceCost.ToString();
         strCrtCost.text = upgrades.critMineDamageCost.ToString();
+
+        autMinCost.text = upgrades.autoMinerCost.ToString();
 
         pickaxeImage.style.backgroundImage = new StyleBackground(pickaxeSprites[GameManager.Instance.currentPickaxe]);           
     }
