@@ -31,6 +31,7 @@ public class IceCube : MonoBehaviour
 
     private void AutoMine()
     {
+        Debug.Log(GameManager.Instance.autoMineDamage);
         hp -= GameManager.Instance.autoMineDamage;
     }
 
@@ -38,7 +39,7 @@ public class IceCube : MonoBehaviour
     {
         ctrl = new Controls();
         spriteRenderer.sprite = iceCubeSprites[0];
-        InvokeRepeating("AutoMine", 1f, 1f);
+        InvokeRepeating(nameof(AutoMine), 1.0f, 1.0f);
     }
 
     private void OnEnable()
@@ -70,31 +71,31 @@ public class IceCube : MonoBehaviour
             }
 
             StartCoroutine(Shake());
-
-            float hpThreshhold = (float)maxHp / 3f;
-            if (hp <= 0)
-            {
-                GameManager.Instance.ice += GameManager.Instance.iceMultiplier * GameManager.Instance.bonusIce;
-                hp = maxHp;
-                spriteRenderer.sprite = iceCubeSprites[0];
-            }
-            else if ((float)hp < hpThreshhold)
-            {
-                spriteRenderer.sprite = iceCubeSprites[3];
-            }
-            else if ((float)hp < hpThreshhold * 2f)
-            {
-                spriteRenderer.sprite = iceCubeSprites[2];
-            }
-            else if ((float)hp < hpThreshhold * 3f)
-            {
-                spriteRenderer.sprite = iceCubeSprites[1];
-            }
         }
     }
 
     void Update()
     {
+        float hpThreshhold = (float)maxHp / 3f;
+        if (hp <= 0)
+        {
+            GameManager.Instance.ice += GameManager.Instance.iceMultiplier * GameManager.Instance.bonusIce;
+            hp = maxHp;
+            spriteRenderer.sprite = iceCubeSprites[0];
+        }
+        else if ((float)hp < hpThreshhold)
+        {
+            spriteRenderer.sprite = iceCubeSprites[3];
+        }
+        else if ((float)hp < hpThreshhold * 2f)
+        {
+            spriteRenderer.sprite = iceCubeSprites[2];
+        }
+        else if ((float)hp < hpThreshhold * 3f)
+        {
+            spriteRenderer.sprite = iceCubeSprites[1];
+        }
+
         if (shaking)
         {
             this.gameObject.transform.position = new Vector2(Mathf.Sin((Time.time - shakeStartTime) * 30f) * 0.2f, this.gameObject.transform.position.y);
