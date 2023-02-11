@@ -43,7 +43,7 @@ public class GameManager : MonoBehaviour
         bonusIce = 1;
         iceMultiplier = 1;
         critChance = 0f;
-        critDamage = 100f;
+        critDamage = 2.0f;
 
         pickaxePowers[1] = 5;
         pickaxePowers[2] = 10;
@@ -52,7 +52,7 @@ public class GameManager : MonoBehaviour
         pickaxePowers[5] = 250;
         pickaxePowers[6] = 2000;
 
-        autoMineDamage = 2;
+        autoMineDamage = 0;
     }
 
     // Update is called once per frame

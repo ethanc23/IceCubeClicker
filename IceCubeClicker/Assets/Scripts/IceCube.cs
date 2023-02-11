@@ -16,9 +16,10 @@ public class IceCube : MonoBehaviour
 
     private Controls ctrl;
 
+    [SerializeField] private DamagePopupManager damagePopupManager;
     [SerializeField] private SpriteRenderer spriteRenderer;
-
     [SerializeField] private Sprite[] iceCubeSprites;
+    [SerializeField] private GameObject canvas;
 
     // Start is called before the first frame update
     void Start()
@@ -31,7 +32,6 @@ public class IceCube : MonoBehaviour
 
     private void AutoMine()
     {
-        Debug.Log(GameManager.Instance.autoMineDamage);
         hp -= GameManager.Instance.autoMineDamage;
     }
 
@@ -56,20 +56,25 @@ public class IceCube : MonoBehaviour
 
     public void Click(InputAction.CallbackContext context)
     {
-        
-        Ray ray = Camera.main.ScreenPointToRay(ctrl.Default.MousePos.ReadValue<Vector2>());
+        Vector2 mousePos = ctrl.Default.MousePos.ReadValue<Vector2>();
+        Ray ray = Camera.main.ScreenPointToRay(mousePos);
         RaycastHit2D hit = Physics2D.GetRayIntersection(ray);
         if (hit.collider != null)
         {
+            int damage;
+            Color color;
             if (GameManager.Instance.critChance > Random.Range(0f, 100f))
             {
-                hp -= (int)((GameManager.Instance.basePickPower + GameManager.Instance.pickPower) * GameManager.Instance.critDamage);
+                damage = (int)((GameManager.Instance.basePickPower + GameManager.Instance.pickPower) * GameManager.Instance.critDamage);
+                color = new Color(180f/255f, 80f/255f, 10f/255f);
             }
             else
             {
-                hp -= GameManager.Instance.basePickPower + GameManager.Instance.pickPower;
+                damage = GameManager.Instance.basePickPower + GameManager.Instance.pickPower;
+                color = new Color(160f / 255f, 140f / 255f, 10f / 255f);
             }
-
+            hp -= damage;
+            damagePopupManager.NewPopup(damage.ToString(), new Vector2((mousePos.x - 0.5f * Screen.width) * 0.007f, (mousePos.y - 0.5f * Screen.height) * 0.006f + 0.2f), color);
             StartCoroutine(Shake());
         }
     }
