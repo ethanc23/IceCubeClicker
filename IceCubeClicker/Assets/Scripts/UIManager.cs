@@ -11,18 +11,16 @@ using Unity.VisualScripting.FullSerializer;
 public class UIManager : MonoBehaviour
 {
     [SerializeField] private Upgrades upgrades;
-
+    [SerializeField] private IceCube iceCube;
     [SerializeField] private Sprite[] pickaxeSprites;
 
     private VisualElement pickaxeWindow;
 
     private Label iceCount;
+    private Label iceHealth;
 
-    private VisualElement clickUpgradesWindow;
-    private VisualElement idleUpgradesWindow;
-
-    private Button clickUpgradesButton;
-    private Button idleUpgradesButton;
+    private VisualElement upgradesWindow;
+    private Button upgradesButton;
 
     private Label effMinNum;
     private Label strPicNum;
@@ -82,12 +80,10 @@ public class UIManager : MonoBehaviour
         pickaxeWindow = root.Q<VisualElement>("pickaxeWindow");
         
         iceCount = root.Q<Label>("iceCount");
+        iceHealth = root.Q<Label>("hpLabel");
 
-        clickUpgradesWindow = root.Q<VisualElement>("clickUpgradesWindow");
-        idleUpgradesWindow = root.Q<VisualElement>("idleUpgradesWindow");
-
-        clickUpgradesButton = root.Q<Button>("clickUpgradesButton");
-        idleUpgradesButton = root.Q<Button>("idleUpgradesButton");
+        upgradesWindow = root.Q<VisualElement>("upgradesWindow");
+        upgradesButton = root.Q<Button>("upgradesButton");
 
         effMinNum = root.Q<Label>("effMinNum");
         strPicNum = root.Q<Label>("strPicNum");
@@ -130,8 +126,7 @@ public class UIManager : MonoBehaviour
         pickSelect[5] = root.Q<Button>("steelPickSelect");
         pickSelect[6] = root.Q<Button>("titaniumPickSelect");
 
-        clickUpgradesButton.clicked += ClickUpgradeWindow;
-        idleUpgradesButton.clicked += IdleUpgradeWindow;
+        upgradesButton.clicked += UpgradesWindow;
 
         effMinButton.clicked += upgrades.efficientMining;
         strPicButton.clicked += upgrades.strongerPick;
@@ -157,8 +152,7 @@ public class UIManager : MonoBehaviour
         pickSelect[5].clicked += SteelPickSelect;
         pickSelect[6].clicked += TitaniumPickSelect;
 
-        clickUpgradesWindow.visible = false;
-        idleUpgradesWindow.visible = false;
+        upgradesWindow.visible = false;
         pickaxeWindow.visible = false;
 
         stonePickCost = 50;
@@ -183,27 +177,15 @@ public class UIManager : MonoBehaviour
         titaniumPickBuy.text = titaniumPickCost.ToString();
     }
 
-    private void ClickUpgradeWindow()
+    private void UpgradesWindow()
     {
-        if (clickUpgradesWindow.visible == false)
+        if (upgradesWindow.visible == false)
         {
-            clickUpgradesWindow.visible = true;
-        } 
-        else if (clickUpgradesWindow.visible == true)
-        {
-            clickUpgradesWindow.visible = false;
+            upgradesWindow.visible = true;
         }
-    }
-
-    private void IdleUpgradeWindow()
-    {
-        if (idleUpgradesWindow.visible == false)
+        else if (upgradesWindow.visible == true)
         {
-            idleUpgradesWindow.visible = true;
-        }
-        else if (idleUpgradesWindow.visible == true)
-        {
-            idleUpgradesWindow.visible = false;
+            upgradesWindow.visible = false;
         }
     }
 
@@ -375,6 +357,7 @@ public class UIManager : MonoBehaviour
     void OnGUI()
     {
         iceCount.text = GameManager.Instance.ice.ToString();
+        iceHealth.text = iceCube.hp.ToString();
 
         effMinNum.text = upgrades.efficientMiningLvl.ToString();
         strPicNum.text = upgrades.strongerPickLvl.ToString();
