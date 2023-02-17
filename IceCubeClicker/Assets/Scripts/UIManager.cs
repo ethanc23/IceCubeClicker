@@ -19,7 +19,9 @@ public class UIManager : MonoBehaviour
     private Label iceCount;
     private Label iceHealth;
 
+    private VisualElement drillWindow;
     private VisualElement upgradesWindow;
+    private Button drillButton;
     private Button upgradesButton;
 
     private Label effMinNum;
@@ -49,7 +51,7 @@ public class UIManager : MonoBehaviour
     private Button pickaxeButton;
     private VisualElement pickaxeImage;
 
-    IDictionary<int, Button> pickSelect = new Dictionary<int, Button>();
+    private readonly IDictionary<int, Button> pickSelect = new Dictionary<int, Button>();
 
     private Button stonePickBuy;
     private Button copperPickBuy;
@@ -57,6 +59,12 @@ public class UIManager : MonoBehaviour
     private Button ironPickBuy;
     private Button steelPickBuy;
     private Button titaniumPickBuy;
+
+    private Button drillBitButton;
+    private Button drillBatteryButton;
+    private Button drillMotorButton;
+    private Button drillGearboxButton;
+    private Button drillBaseButton;
 
     private int stonePickCost;
     private int copperPickCost;
@@ -82,7 +90,9 @@ public class UIManager : MonoBehaviour
         iceCount = root.Q<Label>("iceCount");
         iceHealth = root.Q<Label>("hpLabel");
 
+        drillWindow = root.Q<VisualElement>("drillWindow");
         upgradesWindow = root.Q<VisualElement>("upgradesWindow");
+        drillButton = root.Q<Button>("drillButton");
         upgradesButton = root.Q<Button>("upgradesButton");
 
         effMinNum = root.Q<Label>("effMinNum");
@@ -126,6 +136,7 @@ public class UIManager : MonoBehaviour
         pickSelect[5] = root.Q<Button>("steelPickSelect");
         pickSelect[6] = root.Q<Button>("titaniumPickSelect");
 
+        drillButton.clicked += DrillWindow;
         upgradesButton.clicked += UpgradesWindow;
 
         effMinButton.clicked += upgrades.efficientMining;
@@ -175,6 +186,18 @@ public class UIManager : MonoBehaviour
         ironPickBuy.text = ironPickCost.ToString();
         steelPickBuy.text = steelPickCost.ToString();
         titaniumPickBuy.text = titaniumPickCost.ToString();
+    }
+
+    private void DrillWindow()
+    {
+        if (drillWindow.visible == false)
+        {
+            drillWindow.visible = true;
+        }
+        else if (upgradesWindow.visible == true)
+        {
+            upgradesWindow.visible = false;
+        }
     }
 
     private void UpgradesWindow()
