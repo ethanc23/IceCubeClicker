@@ -22,6 +22,7 @@ public class UIManager : MonoBehaviour
     private VisualElement drillWindow;
     private VisualElement upgradesWindow;
     private Button drillButton;
+    private Button drillClose;
     private Button upgradesButton;
 
     private Label effMinNum;
@@ -93,6 +94,7 @@ public class UIManager : MonoBehaviour
         drillWindow = root.Q<VisualElement>("drillWindow");
         upgradesWindow = root.Q<VisualElement>("upgradesWindow");
         drillButton = root.Q<Button>("drillButton");
+        drillClose = root.Q<Button>("drillExit");
         upgradesButton = root.Q<Button>("upgradesButton");
 
         effMinNum = root.Q<Label>("effMinNum");
@@ -137,6 +139,7 @@ public class UIManager : MonoBehaviour
         pickSelect[6] = root.Q<Button>("titaniumPickSelect");
 
         drillButton.clicked += DrillWindow;
+        drillClose.clicked += DrillWindow;
         upgradesButton.clicked += UpgradesWindow;
 
         effMinButton.clicked += upgrades.efficientMining;
@@ -165,6 +168,7 @@ public class UIManager : MonoBehaviour
 
         upgradesWindow.visible = false;
         pickaxeWindow.visible = false;
+        drillWindow.visible = false;
 
         stonePickCost = 50;
         copperPickCost = 200;
@@ -193,11 +197,9 @@ public class UIManager : MonoBehaviour
         if (drillWindow.visible == false)
         {
             drillWindow.visible = true;
+            return;
         }
-        else if (upgradesWindow.visible == true)
-        {
-            upgradesWindow.visible = false;
-        }
+        drillWindow.visible = false;
     }
 
     private void UpgradesWindow()
@@ -205,11 +207,9 @@ public class UIManager : MonoBehaviour
         if (upgradesWindow.visible == false)
         {
             upgradesWindow.visible = true;
+            return;
         }
-        else if (upgradesWindow.visible == true)
-        {
-            upgradesWindow.visible = false;
-        }
+        upgradesWindow.visible = false;
     }
 
     private void pickBorder(int pick)
@@ -238,11 +238,9 @@ public class UIManager : MonoBehaviour
         if (pickaxeWindow.visible == false)
         {
             pickaxeWindow.visible = true;
+            return;
         } 
-        else if (pickaxeWindow.visible == true)
-        {
-            pickaxeWindow.visible = false;
-        }
+        pickaxeWindow.visible = false;
     }
 
     private void StonePickBuy()
