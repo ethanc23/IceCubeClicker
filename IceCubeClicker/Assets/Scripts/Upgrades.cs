@@ -7,6 +7,7 @@ using UnityEngine.UIElements;
 public class Upgrades : MonoBehaviour
 {
     public IceCube iceCube;
+    [SerializeField] private HealthBar healthBar;
 
     public int denserCubesLvl;
     public int strongerPickLvl;
@@ -61,6 +62,7 @@ public class Upgrades : MonoBehaviour
         {
             GameManager.Instance.ice -= denserCubesCost;
             iceCube.maxHp *= 2;
+            healthBar.setMaxHp(iceCube.maxHp);
             GameManager.Instance.iceMultiplier++;
             denserCubesLvl++;
             denserCubesCost = (int)Mathf.Floor(25f * (Mathf.Pow(2, denserCubesLvl) / Mathf.Log(denserCubesLvl + 1, 2)));

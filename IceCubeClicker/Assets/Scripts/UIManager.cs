@@ -17,7 +17,6 @@ public class UIManager : MonoBehaviour
     private VisualElement pickaxeWindow;
 
     private Label iceCount;
-    private Label iceHealth;
 
     private VisualElement drillWindow;
     private VisualElement upgradesWindow;
@@ -89,7 +88,6 @@ public class UIManager : MonoBehaviour
         pickaxeWindow = root.Q<VisualElement>("pickaxeWindow");
         
         iceCount = root.Q<Label>("iceCount");
-        iceHealth = root.Q<Label>("hpLabel");
 
         drillWindow = root.Q<VisualElement>("drillWindow");
         upgradesWindow = root.Q<VisualElement>("upgradesWindow");
@@ -378,7 +376,6 @@ public class UIManager : MonoBehaviour
     void OnGUI()
     {
         iceCount.text = GameManager.Instance.ice.ToString();
-        iceHealth.text = iceCube.hp.ToString();
 
         effMinNum.text = upgrades.efficientMiningLvl.ToString();
         strPicNum.text = upgrades.strongerPickLvl.ToString();

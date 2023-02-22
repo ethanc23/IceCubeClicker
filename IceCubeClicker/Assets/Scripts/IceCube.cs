@@ -20,12 +20,15 @@ public class IceCube : MonoBehaviour
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private Sprite[] iceCubeSprites;
     [SerializeField] private GameObject canvas;
+    [SerializeField] private HealthBar healthBar;
 
     // Start is called before the first frame update
     void Start()
     {
         maxHp = 5;
+        healthBar.setMaxHp(maxHp);
         hp = maxHp;
+        healthBar.setHp(hp);
         shaking = false;
         shakeStartTime = 0f;
     }
@@ -33,6 +36,7 @@ public class IceCube : MonoBehaviour
     private void AutoMine()
     {
         hp -= GameManager.Instance.autoMineDamage;
+        healthBar.setHp(hp);
     }
 
     void Awake()
@@ -74,6 +78,7 @@ public class IceCube : MonoBehaviour
                 color = new Color(160f / 255f, 140f / 255f, 10f / 255f);
             }
             hp -= damage;
+            healthBar.setHp(hp);
             damagePopupManager.NewPopup(damage.ToString(), new Vector2((mousePos.x - 0.5f * Screen.width) * 0.007f, (mousePos.y - 0.5f * Screen.height) * 0.006f + 0.2f), color);
             StartCoroutine(Shake());
         }
@@ -86,6 +91,7 @@ public class IceCube : MonoBehaviour
         {
             GameManager.Instance.ice += GameManager.Instance.iceMultiplier * GameManager.Instance.bonusIce;
             hp = maxHp;
+            healthBar.setHp(hp);
             spriteRenderer.sprite = iceCubeSprites[0];
         }
         else if ((float)hp < hpThreshhold)
@@ -103,7 +109,7 @@ public class IceCube : MonoBehaviour
 
         if (shaking)
         {
-            this.gameObject.transform.position = new Vector2(Mathf.Sin((Time.time - shakeStartTime) * 30f) * 0.2f, this.gameObject.transform.position.y);
+            gameObject.transform.position = new Vector2(Mathf.Sin((Time.time - shakeStartTime) * 30f) * 0.2f, gameObject.transform.position.y);
         }
     }
 

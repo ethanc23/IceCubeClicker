@@ -63,9 +63,7 @@
                     </ui:VisualElement>
                 </ui:VisualElement>
             </ui:VisualElement>
-            <ui:VisualElement style="width: 37.5%; height: 100%; align-items: center; justify-content: center;">
-                <ui:Label text="IceHealth" display-tooltip-when-elided="true" name="hpLabel" style="justify-content: flex-start; top: 27.5%; right: auto; left: 17.5%; font-size: 25%;" />
-            </ui:VisualElement>
+            <ui:VisualElement style="width: 37.5%; height: 100%; align-items: center; justify-content: center;" />
             <ui:VisualElement style="right: auto; height: 100%; width: 25%; justify-content: flex-end; flex-direction: column; align-items: flex-start;">
                 <ui:Button text="Stats" display-tooltip-when-elided="true" name="statsButton" style="bottom: 42%;" />
                 <ui:VisualElement name="pickaxeWindow" style="height: 50%; width: 100%; justify-content: flex-start; background-color: rgb(48, 48, 48); display: flex; visibility: visible; border-left-width: 2px; border-right-width: 2px; border-top-width: 2px; border-bottom-width: 2px; border-left-color: rgb(64, 64, 64); border-right-color: rgb(64, 64, 64); border-top-color: rgb(64, 64, 64); border-bottom-color: rgb(64, 64, 64);">
@@ -99,7 +97,7 @@
                     </ui:VisualElement>
                 </ui:VisualElement>
             </ui:VisualElement>
-            <ui:VisualElement name="drillWindow" style="position: absolute; left: 0; top: 0; width: 80%; height: 90%; background-color: rgb(48, 48, 48); -unity-text-outline-width: 0; -unity-text-outline-color: rgb(64, 64, 64); border-left-color: rgb(64, 64, 64); border-right-color: rgb(64, 64, 64); border-top-color: rgb(64, 64, 64); border-bottom-color: rgb(64, 64, 64); border-left-width: 2px; border-right-width: 2px; border-top-width: 2px; border-bottom-width: 2px; display: flex; visibility: visible; align-items: center; justify-content: center; flex-direction: row;">
+            <ui:VisualElement name="drillWindow" style="position: absolute; left: 0; top: 0; width: 80%; height: 90%; background-color: rgb(48, 48, 48); -unity-text-outline-width: 0; -unity-text-outline-color: rgb(64, 64, 64); border-left-color: rgb(64, 64, 64); border-right-color: rgb(64, 64, 64); border-top-color: rgb(64, 64, 64); border-bottom-color: rgb(64, 64, 64); border-left-width: 2px; border-right-width: 2px; border-top-width: 2px; border-bottom-width: 2px; display: flex; visibility: hidden; align-items: center; justify-content: center; flex-direction: row;">
                 <ui:VisualElement style="width: 30%; height: 100%; align-items: center; justify-content: center;">
                     <ui:VisualElement style="width: 90%; height: 45%; bottom: 2.5%; background-color: rgb(36, 36, 36);" />
                     <ui:VisualElement style="width: 90%; height: 40%; bottom: auto; top: 2.5%; background-color: rgb(36, 36, 36);" />
