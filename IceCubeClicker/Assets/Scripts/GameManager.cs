@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get; set; }
 
     public int ice;
+    public int depth;
 
     public int currentPickaxe;
 
@@ -37,6 +38,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         ice = 0;
+        depth = 0;
         currentPickaxe = 0;
         basePickPower = 1;
         pickPower = 0;

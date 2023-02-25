@@ -17,6 +17,7 @@ public class UIManager : MonoBehaviour
     private VisualElement pickaxeWindow;
 
     private Label iceCount;
+    private Label depth;
 
     private VisualElement drillWindow;
     private VisualElement upgradesWindow;
@@ -88,6 +89,7 @@ public class UIManager : MonoBehaviour
         pickaxeWindow = root.Q<VisualElement>("pickaxeWindow");
         
         iceCount = root.Q<Label>("iceCount");
+        depth = root.Q<Label>("depthLabel");
 
         drillWindow = root.Q<VisualElement>("drillWindow");
         upgradesWindow = root.Q<VisualElement>("upgradesWindow");
@@ -376,6 +378,7 @@ public class UIManager : MonoBehaviour
     void OnGUI()
     {
         iceCount.text = GameManager.Instance.ice.ToString();
+        depth.text = "Depth: "+ GameManager.Instance.depth.ToString();
 
         effMinNum.text = upgrades.efficientMiningLvl.ToString();
         strPicNum.text = upgrades.strongerPickLvl.ToString();
