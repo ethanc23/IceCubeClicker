@@ -11,6 +11,7 @@ public class IceCube : MonoBehaviour
 
     public int maxHp;
     public int hp;
+    private int baseIce;
 
     private bool shaking;
 
@@ -22,9 +23,12 @@ public class IceCube : MonoBehaviour
     [SerializeField] private GameObject canvas;
     [SerializeField] private HealthBar healthBar;
 
+    private float autoMineTickrate = 0.1f;
+
     // Start is called before the first frame update
     void Start()
     {
+        baseIce = 1;
         maxHp = 5;
         healthBar.setMaxHp(maxHp);
         hp = maxHp;
@@ -35,7 +39,7 @@ public class IceCube : MonoBehaviour
 
     private void AutoMine()
     {
-        hp -= GameManager.Instance.autoMineDamage;
+        hp -= (int)(autoMineTickrate * GameManager.Instance.autoMineDamage);
         healthBar.setHp(hp);
     }
 
@@ -43,7 +47,7 @@ public class IceCube : MonoBehaviour
     {
         ctrl = new Controls();
         spriteRenderer.sprite = iceCubeSprites[0];
-        InvokeRepeating(nameof(AutoMine), 1.0f, 1.0f);
+        InvokeRepeating(nameof(AutoMine), 1.0f, autoMineTickrate);
     }
 
     private void OnEnable()
@@ -56,6 +60,15 @@ public class IceCube : MonoBehaviour
     {
         ctrl.Disable();
         ctrl.Default.LeftClick.performed -= Click;
+    }
+
+    public void SetCube()
+    {
+        maxHp = 5 * (int)Mathf.Exp(GameManager.Instance.height);
+        hp = maxHp;
+        baseIce = 3 * (int)Mathf.Exp(GameManager.Instance.height) - 2;
+        healthBar.setMaxHp(maxHp);
+        healthBar.setHp(hp);
     }
 
     public void Click(InputAction.CallbackContext context)
@@ -89,7 +102,7 @@ public class IceCube : MonoBehaviour
         float hpThreshhold = (float)maxHp / 3f;
         if (hp <= 0)
         {
-            GameManager.Instance.ice += GameManager.Instance.iceMultiplier * GameManager.Instance.bonusIce;
+            GameManager.Instance.ice += GameManager.Instance.iceMultiplier * baseIce + GameManager.Instance.bonusIce;
             hp = maxHp;
             healthBar.setHp(hp);
             spriteRenderer.sprite = iceCubeSprites[0];

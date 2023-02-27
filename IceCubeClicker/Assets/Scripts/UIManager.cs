@@ -241,8 +241,7 @@ public class UIManager : MonoBehaviour
         if (GameManager.Instance.maxHeight > GameManager.Instance.height)
         {
             GameManager.Instance.height++;
-            iceCube.maxHp = 5 * (int)Mathf.Exp(GameManager.Instance.height);
-            iceCube.hp = iceCube.maxHp;
+            iceCube.SetCube();
             down.visible = true;
             if (GameManager.Instance.maxHeight == GameManager.Instance.height)
             {
@@ -256,8 +255,7 @@ public class UIManager : MonoBehaviour
         if (GameManager.Instance.height > 0)
         {
             GameManager.Instance.height--;
-            iceCube.maxHp = 5 * (int)Mathf.Exp(GameManager.Instance.height);
-            iceCube.hp = iceCube.maxHp;
+            iceCube.SetCube();
             up.visible = true;
             if (GameManager.Instance.height == 0)
             {

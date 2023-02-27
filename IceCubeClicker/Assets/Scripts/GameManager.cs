@@ -44,7 +44,7 @@ public class GameManager : MonoBehaviour
         currentPickaxe = 0;
         basePickPower = 1;
         pickPower = 0;
-        bonusIce = 1;
+        bonusIce = 0;
         iceMultiplier = 1;
         critChance = 0f;
         critDamage = 2.0f;
