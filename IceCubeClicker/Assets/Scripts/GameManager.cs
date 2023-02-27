@@ -8,7 +8,8 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get; set; }
 
     public int ice;
-    public int depth;
+    public int height;
+    public int maxHeight;
 
     public int currentPickaxe;
 
@@ -37,8 +38,9 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        ice = 0;
-        depth = 0;
+        ice = 100000;
+        height = 0;
+        maxHeight = 0;
         currentPickaxe = 0;
         basePickPower = 1;
         pickPower = 0;

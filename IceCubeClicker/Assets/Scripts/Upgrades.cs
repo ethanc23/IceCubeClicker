@@ -9,13 +9,11 @@ public class Upgrades : MonoBehaviour
     public IceCube iceCube;
     [SerializeField] private HealthBar healthBar;
 
-    public int denserCubesLvl;
     public int strongerPickLvl;
     public int efficientMiningLvl;
     public int critMineChanceLvl;
     public int critMineDamageLvl;
 
-    public int denserCubesCost;
     public int strongerPickCost;
     public int efficientMiningCost;
     public int critMineChanceCost;
@@ -28,13 +26,11 @@ public class Upgrades : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        denserCubesLvl = 1;
         strongerPickLvl = 1;
         efficientMiningLvl = 1;
         critMineChanceLvl = 1;
         critMineDamageLvl = 1;
 
-        denserCubesCost = 25;
         strongerPickCost = 10;
         efficientMiningCost = 10;
         critMineChanceCost = 100;
@@ -53,19 +49,6 @@ public class Upgrades : MonoBehaviour
             strongerPickLvl++;
             strongerPickCost = (int)Mathf.Floor(15 * Mathf.Pow(strongerPickLvl, 1.2f));
 
-        }
-    }
-
-    public void denserCubes()
-    {
-        if (GameManager.Instance.ice >= denserCubesCost)
-        {
-            GameManager.Instance.ice -= denserCubesCost;
-            iceCube.maxHp *= 2;
-            healthBar.setMaxHp(iceCube.maxHp);
-            GameManager.Instance.iceMultiplier++;
-            denserCubesLvl++;
-            denserCubesCost = (int)Mathf.Floor(25f * (Mathf.Pow(2, denserCubesLvl) / Mathf.Log(denserCubesLvl + 1, 2)));
         }
     }
 

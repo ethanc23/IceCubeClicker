@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using System.Linq;
 using Unity.VisualScripting.FullSerializer;
+using Unity.Mathematics;
 
 public class UIManager : MonoBehaviour
 {
@@ -17,17 +18,22 @@ public class UIManager : MonoBehaviour
     private VisualElement pickaxeWindow;
 
     private Label iceCount;
-    private Label depth;
+    private Label height;
 
     private VisualElement drillWindow;
     private VisualElement upgradesWindow;
     private Button drillButton;
     private Button drillClose;
     private Button upgradesButton;
+    private Button liftButton;
+
+    private Button up;
+    private Button down;
+
+    private int liftCost;
 
     private Label effMinNum;
     private Label strPicNum;
-    private Label denCubNum;
     private Label morCrtNum;
     private Label strCrtNum;
 
@@ -35,7 +41,6 @@ public class UIManager : MonoBehaviour
 
     private Label effMinCost;
     private Label strPicCost;
-    private Label denCubCost;
     private Label morCrtCost;
     private Label strCrtCost;
 
@@ -43,7 +48,6 @@ public class UIManager : MonoBehaviour
 
     private Button effMinButton;
     private Button strPicButton;
-    private Button denCubButton;
     private Button morCrtButton;
     private Button strCrtButton;
 
@@ -89,17 +93,20 @@ public class UIManager : MonoBehaviour
         pickaxeWindow = root.Q<VisualElement>("pickaxeWindow");
         
         iceCount = root.Q<Label>("iceCount");
-        depth = root.Q<Label>("depthLabel");
+        height = root.Q<Label>("heightLabel");
 
         drillWindow = root.Q<VisualElement>("drillWindow");
         upgradesWindow = root.Q<VisualElement>("upgradesWindow");
         drillButton = root.Q<Button>("drillButton");
         drillClose = root.Q<Button>("drillExit");
         upgradesButton = root.Q<Button>("upgradesButton");
+        liftButton = root.Q<Button>("liftButton");
+
+        up = root.Q<Button>("upButton");
+        down = root.Q<Button>("downButton");
 
         effMinNum = root.Q<Label>("effMinNum");
         strPicNum = root.Q<Label>("strPicNum");
-        denCubNum = root.Q<Label>("denCubNum");
         morCrtNum = root.Q<Label>("morCrtNum");
         strCrtNum = root.Q<Label>("strCrtNum");
 
@@ -107,7 +114,6 @@ public class UIManager : MonoBehaviour
 
         effMinCost = root.Q<Label>("effMinCost");
         strPicCost = root.Q<Label>("strPicCost");
-        denCubCost = root.Q<Label>("denCubCost");
         morCrtCost = root.Q<Label>("morCrtCost");
         strCrtCost = root.Q<Label>("strCrtCost");
 
@@ -115,7 +121,6 @@ public class UIManager : MonoBehaviour
 
         effMinButton = root.Q<Button>("effMinButton");
         strPicButton = root.Q<Button>("strPicButton");
-        denCubButton = root.Q<Button>("denCubButton");
         morCrtButton = root.Q<Button>("morCrtButton");
         strCrtButton = root.Q<Button>("strCrtButton");
 
@@ -141,10 +146,13 @@ public class UIManager : MonoBehaviour
         drillButton.clicked += DrillWindow;
         drillClose.clicked += DrillWindow;
         upgradesButton.clicked += UpgradesWindow;
+        liftButton.clicked += LiftButton;
+
+        up.clicked += Up;
+        down.clicked += Down;
 
         effMinButton.clicked += upgrades.efficientMining;
         strPicButton.clicked += upgrades.strongerPick;
-        denCubButton.clicked += upgrades.denserCubes;
         morCrtButton.clicked += upgrades.critMineChance;
         strCrtButton.clicked += upgrades.critMineDamage;
 
@@ -169,6 +177,10 @@ public class UIManager : MonoBehaviour
         upgradesWindow.visible = false;
         pickaxeWindow.visible = false;
         drillWindow.visible = false;
+        up.visible = false;
+        down.visible = false;
+
+        liftCost = 25;
 
         stonePickCost = 50;
         copperPickCost = 200;
@@ -210,6 +222,48 @@ public class UIManager : MonoBehaviour
             return;
         }
         upgradesWindow.visible = false;
+    }
+
+    private void LiftButton()
+    {
+        if (GameManager.Instance.ice >= liftCost)
+        {
+            GameManager.Instance.ice -= liftCost;
+            GameManager.Instance.maxHeight++;
+            //Improve
+            liftCost += liftCost;
+            up.visible = true;
+        }
+    }
+
+    private void Up()
+    {
+        if (GameManager.Instance.maxHeight > GameManager.Instance.height)
+        {
+            GameManager.Instance.height++;
+            iceCube.maxHp = 5 * (int)Mathf.Exp(GameManager.Instance.height);
+            iceCube.hp = iceCube.maxHp;
+            down.visible = true;
+            if (GameManager.Instance.maxHeight == GameManager.Instance.height)
+            {
+                up.visible = false;
+            }
+        }
+    }
+
+    private void Down()
+    {
+        if (GameManager.Instance.height > 0)
+        {
+            GameManager.Instance.height--;
+            iceCube.maxHp = 5 * (int)Mathf.Exp(GameManager.Instance.height);
+            iceCube.hp = iceCube.maxHp;
+            up.visible = true;
+            if (GameManager.Instance.height == 0)
+            {
+                down.visible = false;
+            }
+        }
     }
 
     private void pickBorder(int pick)
@@ -378,11 +432,11 @@ public class UIManager : MonoBehaviour
     void OnGUI()
     {
         iceCount.text = GameManager.Instance.ice.ToString();
-        depth.text = "Depth: "+ GameManager.Instance.depth.ToString();
+        height.text = "Height: "+ GameManager.Instance.height.ToString();
+        liftButton.text = "Lift: " + liftCost + " ice";
 
         effMinNum.text = upgrades.efficientMiningLvl.ToString();
         strPicNum.text = upgrades.strongerPickLvl.ToString();
-        denCubNum.text = upgrades.denserCubesLvl.ToString();
         morCrtNum.text = upgrades.critMineChanceLvl.ToString();
         strCrtNum.text = upgrades.critMineDamageLvl.ToString();
 
@@ -390,7 +444,6 @@ public class UIManager : MonoBehaviour
 
         effMinCost.text = upgrades.efficientMiningCost.ToString();
         strPicCost.text = upgrades.strongerPickCost.ToString();
-        denCubCost.text = upgrades.denserCubesCost.ToString();
         morCrtCost.text = upgrades.critMineChanceCost.ToString();
         strCrtCost.text = upgrades.critMineDamageCost.ToString();
 
