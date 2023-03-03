@@ -69,7 +69,6 @@ public class UIManager : MonoBehaviour
     private Button drillBatteryButton;
     private Button drillMotorButton;
     private Button drillGearboxButton;
-    private Button drillBaseButton;
 
     private int stonePickCost;
     private int copperPickCost;

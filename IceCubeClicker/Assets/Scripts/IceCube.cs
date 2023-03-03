@@ -7,6 +7,8 @@ using Unity.VisualScripting;
 
 public class IceCube : MonoBehaviour
 {
+    private bool drillActive;
+
     private float shakeStartTime;
 
     public int maxHp;
