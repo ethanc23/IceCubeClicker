@@ -20,6 +20,7 @@ public class GameManager : MonoBehaviour
     public int bonusIce;
     public float critChance;
     public float critDamage;
+    public float drillPartDropChance;
 
     public int autoMineDamage;
 
@@ -48,6 +49,7 @@ public class GameManager : MonoBehaviour
         iceMultiplier = 1;
         critChance = 0f;
         critDamage = 2.0f;
+        drillPartDropChance = 0.005f;
 
         pickaxePowers[1] = 5;
         pickaxePowers[2] = 10;

@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.EventSystems;
 using Unity.VisualScripting;
+using System.Linq;
 
 public class IceCube : MonoBehaviour
 {
@@ -24,6 +25,7 @@ public class IceCube : MonoBehaviour
     [SerializeField] private Sprite[] iceCubeSprites;
     [SerializeField] private GameObject canvas;
     [SerializeField] private HealthBar healthBar;
+    [SerializeField] private Drill drill;
 
     private float autoMineTickrate = 0.1f;
 
@@ -99,12 +101,16 @@ public class IceCube : MonoBehaviour
         }
     }
 
-    void Update()
+    public void CheckCubeHp()
     {
         float hpThreshhold = (float)maxHp / 3f;
         if (hp <= 0)
         {
             GameManager.Instance.ice += GameManager.Instance.iceMultiplier * baseIce + GameManager.Instance.bonusIce;
+            if (GameManager.Instance.drillPartDropChance > Random.Range(0f, 1f))
+            {
+                drill.partInventory.Append(drill.GeneratePart());
+            }
             hp = maxHp;
             healthBar.setHp(hp);
             spriteRenderer.sprite = iceCubeSprites[0];
@@ -121,7 +127,10 @@ public class IceCube : MonoBehaviour
         {
             spriteRenderer.sprite = iceCubeSprites[1];
         }
+    }
 
+    void Update()
+    {
         if (shaking)
         {
             gameObject.transform.position = new Vector2(Mathf.Sin((Time.time - shakeStartTime) * 30f) * 0.2f, gameObject.transform.position.y);
