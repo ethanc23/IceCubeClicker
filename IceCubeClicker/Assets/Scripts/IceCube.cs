@@ -45,6 +45,7 @@ public class IceCube : MonoBehaviour
     {
         hp -= (int)(autoMineTickrate * GameManager.Instance.autoMineDamage);
         healthBar.setHp(hp);
+        CheckCubeHp();
     }
 
     void Awake()
@@ -96,6 +97,7 @@ public class IceCube : MonoBehaviour
             }
             hp -= damage;
             healthBar.setHp(hp);
+            CheckCubeHp();
             damagePopupManager.NewPopup(damage.ToString(), new Vector2((mousePos.x - 0.5f * Screen.width) * 0.007f, (mousePos.y - 0.5f * Screen.height) * 0.006f + 0.2f), color);
             StartCoroutine(Shake());
         }

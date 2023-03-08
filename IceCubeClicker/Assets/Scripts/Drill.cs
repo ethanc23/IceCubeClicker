@@ -74,7 +74,7 @@ public class Drill : MonoBehaviour
 
         string name = "foo";
 
-        return new Part(name, (PartType)partType, new(implicit1Value, modifiers[partType, implicit2Type]), new(implicit2Value, modifiers[partType, implicit2Type]));
+        return new Part(name, (PartType)partType, new(implicit1Value, modifiers[partType, implicit1Type]), new(implicit2Value, modifiers[partType, implicit2Type]));
     }
 
     // Start is called before the first frame update

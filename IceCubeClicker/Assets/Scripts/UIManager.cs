@@ -84,6 +84,8 @@ public class UIManager : MonoBehaviour
     private bool steelPickOwned;
     private bool titaniumPickOwned;
 
+    private bool drillOwned;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -178,6 +180,7 @@ public class UIManager : MonoBehaviour
         drillWindow.visible = false;
         up.visible = false;
         down.visible = false;
+        drillButton.visible = false;
 
         liftCost = 25;
 
@@ -195,6 +198,9 @@ public class UIManager : MonoBehaviour
         steelPickOwned = false;
         titaniumPickOwned = false;
 
+        drillOwned = false;
+        drillButton.text = "Drill: 1000 ice";
+
         stonePickBuy.text = stonePickCost.ToString();
         copperPickBuy.text = copperPickCost.ToString();
         bronzePickBuy.text = bronzePickCost.ToString();
@@ -205,12 +211,24 @@ public class UIManager : MonoBehaviour
 
     private void DrillWindow()
     {
-        if (drillWindow.visible == false)
+        if (drillOwned)
         {
-            drillWindow.visible = true;
-            return;
+            if (drillWindow.visible == false)
+            {
+                drillWindow.visible = true;
+                return;
+            }
+            drillWindow.visible = false;
         }
-        drillWindow.visible = false;
+        else
+        {
+            if (GameManager.Instance.ice >= 1000)
+            {
+                drillOwned = true;
+                GameManager.Instance.ice -= 1000;
+                drillButton.text = "Drill";
+            }
+        }
     }
 
     private void UpgradesWindow()
@@ -426,7 +444,7 @@ public class UIManager : MonoBehaviour
     }
 
     // Update is called once per frame
-    void OnGUI()
+    private void OnGUI()
     {
         iceCount.text = GameManager.Instance.ice.ToString();
         height.text = "Height: "+ GameManager.Instance.height.ToString();
@@ -447,5 +465,13 @@ public class UIManager : MonoBehaviour
         autMinCost.text = upgrades.autoMinerCost.ToString();
 
         pickaxeImage.style.backgroundImage = new StyleBackground(pickaxeSprites[GameManager.Instance.currentPickaxe]);           
+    }
+
+    private void Update()
+    {
+        if (GameManager.Instance.ice >= 500)
+        {
+            drillButton.visible = true;
+        }
     }
 }
