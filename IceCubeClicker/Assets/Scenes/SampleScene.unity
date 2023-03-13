@@ -546,6 +546,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bcb2bb979b40942469c5d10c18663a5b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  uiManager: {fileID: 1351389383}
   partSprites:
   - {fileID: 21300000, guid: 3023ecc1c43d31441803f10cbf47bf9a, type: 3}
   - {fileID: 21300000, guid: cc60b0ab04698284dbe1f28853863b4f, type: 3}
@@ -721,6 +722,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   upgrades: {fileID: 870300175}
   iceCube: {fileID: 870300173}
+  drill: {fileID: 1247052465}
   pickaxeSprites:
   - {fileID: 21300000, guid: 48e1317e3e5fc224aba22ea1fc608ed1, type: 3}
   - {fileID: 21300000, guid: 499e4bf0b1d3cb342ad343b52d309cc1, type: 3}

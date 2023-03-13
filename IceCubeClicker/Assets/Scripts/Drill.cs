@@ -1,14 +1,17 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.InputSystem.Utilities;
 using Random = UnityEngine.Random;
+using Debug = UnityEngine.Debug;
 
 public class Drill : MonoBehaviour
 {
+    [SerializeField] private UIManager uiManager;
     [SerializeField] private Sprite[] partSprites;
     public enum PartType
     {
@@ -60,7 +63,7 @@ public class Drill : MonoBehaviour
 
     public Part[] drillParts = new Part[4];
 
-    public Part[] partInventory;
+    public List<Part> partInventory = new();
 
     public Part GeneratePart()
     {
@@ -78,25 +81,24 @@ public class Drill : MonoBehaviour
         int implicit2Type = Random.Range(0, 1);
 
         string name = "foo";
-
         return new Part(name, partSprites[partType], (PartType)partType, new(implicit1Value, modifiers[partType, implicit1Type]), new(implicit2Value, modifiers[partType, implicit2Type]));
+    }
+
+    public void AddPartToInventory(Part part)
+    {
+        partInventory.Add(part);
+        uiManager.partInventorySprite(part.sprite, partInventory.Count);
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        for (int i = 0; i < 4; ++i)
-        {
-            PartType type = (PartType)i;
-            switch(type)
-            {
-                case PartType.drillBit: { drillParts[i] = new("Rusty DrillBit", partSprites[i], type, new(1, ModifierType.damage), new(1, ModifierType.partDropChance)); } break;
-                case PartType.battery: { drillParts[i] = new("Rusty Battery", partSprites[i], type, new(1, ModifierType.capacity), new(1, ModifierType.efficiency)); } break;
-                case PartType.motor: { drillParts[i] = new("Rusty Motor", partSprites[i], type, new(1, ModifierType.damage), new(1, ModifierType.speed)); } break;
-                case PartType.gearbox: { drillParts[i] = new("Rusty Gearbox", partSprites[i], type, new(1, ModifierType.speed), new(1, ModifierType.bonusIce)); } break;
-                default: { throw new System.Exception("Drill part type is null"); }
-            }
-        }
+        drillParts[0] = new("Rusty DrillBit", partSprites[0], PartType.drillBit, new(1, ModifierType.damage), new(1, ModifierType.partDropChance));
+        drillParts[1] = new("Rusty Battery", partSprites[1], PartType.battery, new(1, ModifierType.capacity), new(1, ModifierType.efficiency));
+        drillParts[2] = new("Rusty Motor", partSprites[2], PartType.motor, new(1, ModifierType.damage), new(1, ModifierType.speed));
+        drillParts[3] = new("Rusty Gearbox", partSprites[3], PartType.gearbox, new(1, ModifierType.speed), new(1, ModifierType.bonusIce));
+        partInventory.Append(GeneratePart());
+        AddPartToInventory(GeneratePart());
     }
 
     // Update is called once per frame

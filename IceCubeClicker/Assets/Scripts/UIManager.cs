@@ -13,6 +13,7 @@ public class UIManager : MonoBehaviour
 {
     [SerializeField] private Upgrades upgrades;
     [SerializeField] private IceCube iceCube;
+    [SerializeField] private Drill drill;
     [SerializeField] private Sprite[] pickaxeSprites;
 
     private VisualElement pickaxeWindow;
@@ -66,10 +67,17 @@ public class UIManager : MonoBehaviour
     private Button steelPickBuy;
     private Button titaniumPickBuy;
 
+    private List<VisualElement> drillPartInventorySlots = new();
+
     private Button drillBitButton;
     private Button drillBatteryButton;
     private Button drillMotorButton;
     private Button drillGearboxButton;
+
+    private VisualElement drillBitSlot;
+    private VisualElement batterySlot;
+    private VisualElement motorSlot;
+    private VisualElement gearboxSlot;
 
     private int stonePickCost;
     private int copperPickCost;
@@ -93,7 +101,7 @@ public class UIManager : MonoBehaviour
         var root = GetComponent<UIDocument>().rootVisualElement;
 
         pickaxeWindow = root.Q<VisualElement>("pickaxeWindow");
-        
+
         iceCount = root.Q<Label>("iceCount");
         height = root.Q<Label>("heightLabel");
 
@@ -145,6 +153,13 @@ public class UIManager : MonoBehaviour
         pickSelect[4] = root.Q<Button>("ironPickSelect");
         pickSelect[5] = root.Q<Button>("steelPickSelect");
         pickSelect[6] = root.Q<Button>("titaniumPickSelect");
+
+        drillPartInventorySlots = root.Query<VisualElement>(className: "drillInventorySlot").ToList();
+
+        drillBitSlot = root.Q<VisualElement>("drillBitSlot");
+        batterySlot = root.Q<VisualElement>("batterySlot");
+        motorSlot = root.Q<VisualElement>("motorSlot");
+        gearboxSlot = root.Q<VisualElement>("gearboxSlot");
 
         drillButton.clicked += DrillWindow;
         drillClose.clicked += DrillWindow;
@@ -446,6 +461,11 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    public void partInventorySprite(Sprite partSprite, int index)
+    {
+        drillPartInventorySlots[0].style.backgroundImage = new StyleBackground(partSprite);
+    }
+
     // Update is called once per frame
     private void OnGUI()
     {
@@ -467,7 +487,12 @@ public class UIManager : MonoBehaviour
 
         autMinCost.text = upgrades.autoMinerCost.ToString();
 
-        pickaxeImage.style.backgroundImage = new StyleBackground(pickaxeSprites[GameManager.Instance.currentPickaxe]);           
+        pickaxeImage.style.backgroundImage = new StyleBackground(pickaxeSprites[GameManager.Instance.currentPickaxe]);
+
+        drillBitSlot.style.backgroundImage = new StyleBackground(drill.drillParts[0].sprite);
+        batterySlot.style.backgroundImage = new StyleBackground(drill.drillParts[1].sprite);
+        motorSlot.style.backgroundImage = new StyleBackground(drill.drillParts[2].sprite);
+        gearboxSlot.style.backgroundImage = new StyleBackground(drill.drillParts[3].sprite);
     }
 
     private void Update()
