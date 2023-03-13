@@ -1,12 +1,15 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.InputSystem.Utilities;
+using Random = UnityEngine.Random;
 
 public class Drill : MonoBehaviour
 {
+    [SerializeField] private Sprite[] partSprites;
     public enum PartType
     {
         drillBit,
@@ -40,16 +43,18 @@ public class Drill : MonoBehaviour
     public class Part
     {
         public string name;
+        public Sprite sprite;
         public PartType type;
         public Modifier implicit1;
         public Modifier implicit2;
 
-        public Part(string name, PartType type, Modifier implicit1, Modifier implicit2)
+        public Part(string name, Sprite sprite, PartType type, Modifier implicit1, Modifier implicit2)
         {
+            this.name = name;
             this.type = type;
+            this.sprite = sprite;
             this.implicit1 = implicit1;
             this.implicit2 = implicit2;
-            this.name = name;
         }
     }
 
@@ -74,7 +79,7 @@ public class Drill : MonoBehaviour
 
         string name = "foo";
 
-        return new Part(name, (PartType)partType, new(implicit1Value, modifiers[partType, implicit1Type]), new(implicit2Value, modifiers[partType, implicit2Type]));
+        return new Part(name, partSprites[partType], (PartType)partType, new(implicit1Value, modifiers[partType, implicit1Type]), new(implicit2Value, modifiers[partType, implicit2Type]));
     }
 
     // Start is called before the first frame update
@@ -82,29 +87,13 @@ public class Drill : MonoBehaviour
     {
         for (int i = 0; i < 4; ++i)
         {
-            drillParts[i].type = (PartType)i;
-            switch(drillParts[i].type)
+            PartType type = (PartType)i;
+            switch(type)
             {
-                case PartType.drillBit:
-                    drillParts[i].name = "Rusty DrillBit";
-                    drillParts[i].implicit1 = new(1, ModifierType.damage);
-                    drillParts[i].implicit2 = new(1, ModifierType.partDropChance);
-                    break;
-                case PartType.battery:
-                    drillParts[i].name = "Rusty Battery";
-                    drillParts[i].implicit1 = new(1, ModifierType.capacity);
-                    drillParts[i].implicit2 = new(1, ModifierType.efficiency);
-                    break;
-                case PartType.motor:
-                    drillParts[i].name = "Rusty Motor";
-                    drillParts[i].implicit1 = new(1, ModifierType.damage);
-                    drillParts[i].implicit2 = new(1, ModifierType.speed);
-                    break;
-                case PartType.gearbox:
-                    drillParts[i].name = "Rusty Gearbox";
-                    drillParts[i].implicit1 = new(1, ModifierType.speed);
-                    drillParts[i].implicit2 = new(1, ModifierType.bonusIce);
-                    break;
+                case PartType.drillBit: { drillParts[i] = new("Rusty DrillBit", partSprites[i], type, new(1, ModifierType.damage), new(1, ModifierType.partDropChance)); } break;
+                case PartType.battery: { drillParts[i] = new("Rusty Battery", partSprites[i], type, new(1, ModifierType.capacity), new(1, ModifierType.efficiency)); } break;
+                case PartType.motor: { drillParts[i] = new("Rusty Motor", partSprites[i], type, new(1, ModifierType.damage), new(1, ModifierType.speed)); } break;
+                case PartType.gearbox: { drillParts[i] = new("Rusty Gearbox", partSprites[i], type, new(1, ModifierType.speed), new(1, ModifierType.bonusIce)); } break;
                 default: { throw new System.Exception("Drill part type is null"); }
             }
         }

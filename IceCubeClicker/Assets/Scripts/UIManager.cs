@@ -21,10 +21,11 @@ public class UIManager : MonoBehaviour
     private Label height;
 
     private VisualElement drillWindow;
-    private VisualElement upgradesWindow;
     private Button drillButton;
     private Button drillClose;
     private Button upgradesButton;
+    private VisualElement upgradesWindow;
+    private Button upgradesClose;
     private Button liftButton;
 
     private Button up;
@@ -97,10 +98,11 @@ public class UIManager : MonoBehaviour
         height = root.Q<Label>("heightLabel");
 
         drillWindow = root.Q<VisualElement>("drillWindow");
-        upgradesWindow = root.Q<VisualElement>("upgradesWindow");
         drillButton = root.Q<Button>("drillButton");
         drillClose = root.Q<Button>("drillExit");
         upgradesButton = root.Q<Button>("upgradesButton");
+        upgradesWindow = root.Q<VisualElement>("upgradesWindow");
+        upgradesClose = root.Q<Button>("upgradesExit");
         liftButton = root.Q<Button>("liftButton");
 
         up = root.Q<Button>("upButton");
@@ -147,6 +149,7 @@ public class UIManager : MonoBehaviour
         drillButton.clicked += DrillWindow;
         drillClose.clicked += DrillWindow;
         upgradesButton.clicked += UpgradesWindow;
+        upgradesClose.clicked += UpgradesWindow;
         liftButton.clicked += LiftButton;
 
         up.clicked += Up;
