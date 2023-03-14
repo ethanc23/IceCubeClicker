@@ -20,9 +20,16 @@ public class GameManager : MonoBehaviour
     public int bonusIce;
     public float critChance;
     public float critDamage;
-    public float drillPartDropChance;
+    public float partDropChance;
 
     public int autoMineDamage;
+
+    public int drillDamage = 0;
+    public float drillBatteryEfficiency = 0;
+    public int drillBatteryCapacity = 0;
+    public float drillSpeed = 0;
+    public float drillPartDropChance = 0;
+    public int drillBonusIce = 0;
 
     void Awake()
     {
@@ -49,7 +56,7 @@ public class GameManager : MonoBehaviour
         iceMultiplier = 1;
         critChance = 0f;
         critDamage = 2.0f;
-        drillPartDropChance = 1f;
+        partDropChance = 1f;
 
         pickaxePowers[1] = 5;
         pickaxePowers[2] = 10;

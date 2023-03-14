@@ -8,6 +8,7 @@ using UnityEngine;
 using UnityEngine.InputSystem.Utilities;
 using Random = UnityEngine.Random;
 using Debug = UnityEngine.Debug;
+using static UnityEditor.Experimental.GraphView.Port;
 
 public class Drill : MonoBehaviour
 {
@@ -97,13 +98,40 @@ public class Drill : MonoBehaviour
         drillParts[1] = new("Rusty Battery", partSprites[1], PartType.battery, new(1, ModifierType.capacity), new(1, ModifierType.efficiency));
         drillParts[2] = new("Rusty Motor", partSprites[2], PartType.motor, new(1, ModifierType.damage), new(1, ModifierType.speed));
         drillParts[3] = new("Rusty Gearbox", partSprites[3], PartType.gearbox, new(1, ModifierType.speed), new(1, ModifierType.bonusIce));
-        partInventory.Append(GeneratePart());
-        AddPartToInventory(GeneratePart());
+        SetPartEffects();
     }
 
-    // Update is called once per frame
-    void Update()
+    public void SetPartEffects()
     {
+        GameManager.Instance.drillDamage = 0;
+        GameManager.Instance.drillBatteryEfficiency = 0;
+        GameManager.Instance.drillBatteryCapacity = 0;
+        GameManager.Instance.drillBonusIce = 0;
+        GameManager.Instance.drillSpeed = 0;
+        GameManager.Instance.partDropChance = 0;
         
+        foreach (Part part in drillParts)
+        {
+            switch (part.implicit1.type)
+            {
+                case ModifierType.damage: { GameManager.Instance.drillDamage += part.implicit1.value; } break;
+                case ModifierType.efficiency: { GameManager.Instance.drillBatteryEfficiency += part.implicit1.value;  } break;
+                case ModifierType.capacity: { GameManager.Instance.drillBatteryCapacity += part.implicit1.value; } break;
+                case ModifierType.bonusIce: { GameManager.Instance.bonusIce += part.implicit1.value; } break;
+                case ModifierType.speed: { GameManager.Instance.drillSpeed += part.implicit1.value; } break;
+                case ModifierType.partDropChance: { GameManager.Instance.partDropChance += part.implicit1.value; } break;
+                default: { throw new Exception(part.name + " has an invalid type for implicit1"); }
+            }
+            switch (part.implicit2.type)
+            {
+                case ModifierType.damage: { GameManager.Instance.drillDamage += part.implicit2.value; } break;
+                case ModifierType.efficiency: { GameManager.Instance.drillBatteryEfficiency += part.implicit2.value; } break;
+                case ModifierType.capacity: { GameManager.Instance.drillBatteryCapacity += part.implicit2.value; } break;
+                case ModifierType.bonusIce: { GameManager.Instance.bonusIce += part.implicit2.value; } break;
+                case ModifierType.speed: { GameManager.Instance.drillSpeed += part.implicit2.value; } break;
+                case ModifierType.partDropChance: { GameManager.Instance.partDropChance += part.implicit2.value; } break;
+                default: { throw new Exception(part.name + " has an invalid type for implicit2"); }
+            }
+        }
     }
 }
