@@ -69,6 +69,8 @@ public class UIManager : MonoBehaviour
 
     private List<VisualElement> drillPartInventorySlots = new();
 
+    private ScrollView drillPartInventory;
+
     private Button drillBitButton;
     private Button drillBatteryButton;
     private Button drillMotorButton;
@@ -154,6 +156,7 @@ public class UIManager : MonoBehaviour
         pickSelect[5] = root.Q<Button>("steelPickSelect");
         pickSelect[6] = root.Q<Button>("titaniumPickSelect");
 
+        drillPartInventory = root.Q<ScrollView>("drillPartInventory");
         drillPartInventorySlots = root.Query<VisualElement>(className: "drillInventorySlot").ToList();
 
         drillBitSlot = root.Q<VisualElement>("drillBitSlot");
@@ -463,7 +466,20 @@ public class UIManager : MonoBehaviour
 
     public void partInventorySprite(Sprite partSprite, int index)
     {
-        drillPartInventorySlots[0].style.backgroundImage = new StyleBackground(partSprite);
+        if (index >= drillPartInventorySlots.Count)
+        {
+            VisualElement newRow = new();
+            newRow.AddToClassList("drillInventoryRow");
+            drillPartInventory.Add(newRow);
+            for (int i = 0; i < 4; ++i)
+            {
+                VisualElement newSlot = new();
+                newSlot.AddToClassList("drillInventorySlot");
+                newRow.Add(newSlot);
+                drillPartInventorySlots.Add(newSlot);
+            }
+        }
+        drillPartInventorySlots[index].style.backgroundImage = new StyleBackground(partSprite);
     }
 
     // Update is called once per frame

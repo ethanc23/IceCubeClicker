@@ -49,7 +49,7 @@ public class GameManager : MonoBehaviour
         iceMultiplier = 1;
         critChance = 0f;
         critDamage = 2.0f;
-        drillPartDropChance = 0.005f;
+        drillPartDropChance = 1f;
 
         pickaxePowers[1] = 5;
         pickaxePowers[2] = 10;

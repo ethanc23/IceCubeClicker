@@ -74,7 +74,7 @@ public class Drill : MonoBehaviour
             {ModifierType.damage, ModifierType.speed},
             {ModifierType.speed, ModifierType.bonusIce}
         };
-        int partType = Random.Range(0, 3);
+        int partType = Random.Range(0, 4);
         int implicit1Value = 1;
         int implicit2Value = 1;
         int implicit1Type = Random.Range(0, 1);
@@ -87,7 +87,7 @@ public class Drill : MonoBehaviour
     public void AddPartToInventory(Part part)
     {
         partInventory.Add(part);
-        uiManager.partInventorySprite(part.sprite, partInventory.Count);
+        uiManager.partInventorySprite(part.sprite, partInventory.Count - 1);
     }
 
     // Start is called before the first frame update

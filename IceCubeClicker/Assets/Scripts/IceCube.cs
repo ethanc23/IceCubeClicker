@@ -111,7 +111,7 @@ public class IceCube : MonoBehaviour
             GameManager.Instance.ice += GameManager.Instance.iceMultiplier * baseIce + GameManager.Instance.bonusIce;
             if (GameManager.Instance.drillPartDropChance > Random.Range(0f, 1f))
             {
-                drill.partInventory.Append(drill.GeneratePart());
+                drill.AddPartToInventory(drill.GeneratePart());
             }
             hp = maxHp;
             healthBar.setHp(hp);
