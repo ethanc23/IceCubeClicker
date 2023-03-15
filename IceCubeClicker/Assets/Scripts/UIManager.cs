@@ -14,6 +14,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Upgrades upgrades;
     [SerializeField] private IceCube iceCube;
     [SerializeField] private Drill drill;
+    [SerializeField] private DragAndDropManipulator dragAndDropManipulator;
     [SerializeField] private Sprite[] pickaxeSprites;
 
     private VisualElement pickaxeWindow;

@@ -253,8 +253,14 @@ MonoBehaviour:
   bonusIce: 0
   critChance: 0
   critDamage: 0
-  drillPartDropChance: 0
+  partDropChance: 0
   autoMineDamage: 0
+  drillDamage: 0
+  drillBatteryEfficiency: 0
+  drillBatteryCapacity: 0
+  drillSpeed: 0
+  drillPartDropChance: 0
+  drillBonusIce: 0
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
