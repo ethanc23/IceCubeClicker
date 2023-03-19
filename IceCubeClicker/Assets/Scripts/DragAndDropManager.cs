@@ -5,10 +5,10 @@ using UnityEngine.UIElements;
 
 public class DragAndDropManipulator : PointerManipulator
 {
-    public DragAndDropManipulator(VisualElement target)
+    public DragAndDropManipulator(VisualElement target, ScrollView root)
     {
         this.target = target;
-        root = target.parent;
+        this.root = root;
     }
 
     protected override void RegisterCallbacksOnTarget()
@@ -27,17 +27,19 @@ public class DragAndDropManipulator : PointerManipulator
         target.UnregisterCallback<PointerCaptureOutEvent>(PointerCaptureOutHandler);
     }
 
-    private Vector2 targetStartPosition { get; set; }
+    private StyleLength targetStartLeft { get; set; }
+    private StyleLength targetStartTop { get; set; }
 
     private Vector3 pointerStartPosition { get; set; }
 
     private bool enabled { get; set; }
 
-    private VisualElement root { get; }
+    private ScrollView root { get; }
 
     private void PointerDownHandler(PointerDownEvent evt)
     {
-        targetStartPosition = target.transform.position;
+        targetStartLeft = target.style.left;
+        targetStartTop = target.style.top;
         pointerStartPosition = evt.position;
         target.CapturePointer(evt.pointerId);
         enabled = true;
@@ -50,8 +52,8 @@ public class DragAndDropManipulator : PointerManipulator
             Vector3 pointerDelta = evt.position - pointerStartPosition;
 
             target.transform.position = new Vector2(
-                Mathf.Clamp(targetStartPosition.x + pointerDelta.x, 0, target.panel.visualTree.worldBound.width),
-                Mathf.Clamp(targetStartPosition.y + pointerDelta.y, 0, target.panel.visualTree.worldBound.height));
+                Mathf.Clamp(targetStartLeft.value.value + pointerDelta.x, 0, target.panel.visualTree.worldBound.width),
+                Mathf.Clamp(targetStartTop.value.value + pointerDelta.y, 0, target.panel.visualTree.worldBound.height));
         }
     }
 
@@ -67,24 +69,29 @@ public class DragAndDropManipulator : PointerManipulator
     {
         if (enabled)
         {
-            VisualElement slotsContainer = root.Q<VisualElement>("slots");
+            ScrollView slotsContainer = root.Q<ScrollView>("drillPartInventory");
             UQueryBuilder<VisualElement> allSlots =
-                slotsContainer.Query<VisualElement>(className: "slot");
+                slotsContainer.Query<VisualElement>(className: "drillInventorySlot");
             UQueryBuilder<VisualElement> overlappingSlots =
                 allSlots.Where(OverlapsTarget);
             VisualElement closestOverlappingSlot =
                 FindClosestSlot(overlappingSlots);
+            StyleLength closestLeft = 0;
+            StyleLength closestTop = 0;
             Vector3 closestPos = Vector3.zero;
             if (closestOverlappingSlot != null)
             {
-                closestPos = RootSpaceOfSlot(closestOverlappingSlot);
-                closestPos = new Vector2(closestPos.x - 5, closestPos.y - 5);
+                closestLeft = closestOverlappingSlot.style.left;
+                closestTop = closestOverlappingSlot.style.top;
             }
-            target.transform.position =
+            target.style.left =
                 closestOverlappingSlot != null ?
-                closestPos :
-                targetStartPosition;
-
+                closestLeft :
+                targetStartLeft;
+            target.style.top =
+                closestOverlappingSlot != null ?
+                closestTop :
+                targetStartTop;
             enabled = false;
         }
     }
@@ -101,8 +108,7 @@ public class DragAndDropManipulator : PointerManipulator
         VisualElement closest = null;
         foreach (VisualElement slot in slotsList)
         {
-            Vector3 displacement =
-                RootSpaceOfSlot(slot) - target.transform.position;
+            Vector2 displacement = new(slot.style.left.value.value - target.style.left.value.value, slot.style.top.value.value - target.style.left.value.value);
             float distanceSq = displacement.sqrMagnitude;
             if (distanceSq < bestDistanceSq)
             {
@@ -111,11 +117,5 @@ public class DragAndDropManipulator : PointerManipulator
             }
         }
         return closest;
-    }
-
-    private Vector3 RootSpaceOfSlot(VisualElement slot)
-    {
-        Vector2 slotWorldSpace = slot.parent.LocalToWorld(slot.layout.position);
-        return root.WorldToLocal(slotWorldSpace);
     }
 }

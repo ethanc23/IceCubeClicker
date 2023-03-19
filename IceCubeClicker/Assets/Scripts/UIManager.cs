@@ -17,6 +17,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] private DragAndDropManipulator dragAndDropManipulator;
     [SerializeField] private Sprite[] pickaxeSprites;
 
+    private VisualElement background;
+
     private VisualElement pickaxeWindow;
 
     private Label iceCount;
@@ -81,6 +83,9 @@ public class UIManager : MonoBehaviour
     private VisualElement batterySlot;
     private VisualElement motorSlot;
     private VisualElement gearboxSlot;
+
+    private StyleLength drillSlotWidth;
+    private StyleLength drillSlotHeight;
 
     private int stonePickCost;
     private int copperPickCost;
@@ -158,7 +163,7 @@ public class UIManager : MonoBehaviour
         pickSelect[6] = root.Q<Button>("titaniumPickSelect");
 
         drillPartInventory = root.Q<ScrollView>("drillPartInventory");
-        drillPartInventorySlots = root.Query<VisualElement>(className: "drillInventorySlot").ToList();
+        drillPartInventorySlots = drillPartInventory.Query<VisualElement>(className: "drillInventorySlot").ToList();
 
         drillBitSlot = root.Q<VisualElement>("drillBitSlot");
         batterySlot = root.Q<VisualElement>("batterySlot");
@@ -229,7 +234,19 @@ public class UIManager : MonoBehaviour
         ironPickBuy.text = ironPickCost.ToString();
         steelPickBuy.text = steelPickCost.ToString();
         titaniumPickBuy.text = titaniumPickCost.ToString();
+
+        background = root.Q<VisualElement>("Background");
+        background.RegisterCallback<GeometryChangedEvent>(GeometryChangedCallback);
     }
+
+    private void GeometryChangedCallback(GeometryChangedEvent evt)
+    {
+        background.UnregisterCallback<GeometryChangedEvent>(GeometryChangedCallback);
+
+        drillSlotWidth = drillPartInventorySlots[0].resolvedStyle.width;
+        drillSlotHeight = drillPartInventorySlots[0].resolvedStyle.height;
+    }
+
 
     private void DrillWindow()
     {
@@ -345,7 +362,6 @@ public class UIManager : MonoBehaviour
             stonePickBuy.text = "Owned";
         }
     }
-
     private void CopperPickBuy()
     {
         if (GameManager.Instance.ice >= copperPickCost)
@@ -357,7 +373,6 @@ public class UIManager : MonoBehaviour
             copperPickBuy.text = "Owned";
         }
     }
-
     private void BronzePickBuy()
     {
         if (GameManager.Instance.ice >= bronzePickCost)
@@ -369,7 +384,6 @@ public class UIManager : MonoBehaviour
             bronzePickBuy.text = "Owned";
         }
     }
-
     private void IronPickBuy()
     {
         if (GameManager.Instance.ice >= ironPickCost)
@@ -381,7 +395,6 @@ public class UIManager : MonoBehaviour
             ironPickBuy.text = "Owned";
         }
     }
-
     private void SteelPickBuy()
     {
         if (GameManager.Instance.ice >= steelPickCost)
@@ -393,7 +406,6 @@ public class UIManager : MonoBehaviour
             steelPickBuy.text = "Owned";
         }
     }
-
     private void TitaniumPickBuy()
     {
         if (GameManager.Instance.ice >= titaniumPickCost)
@@ -405,6 +417,7 @@ public class UIManager : MonoBehaviour
             titaniumPickBuy.text = "Owned";
         }
     }
+
     private void StonePickSelect()
     {
         if (stonePickOwned == true)
@@ -414,7 +427,6 @@ public class UIManager : MonoBehaviour
             pickBorder(1);
         }
     }
-
     private void CopperPickSelect()
     {
         if (copperPickOwned == true)
@@ -424,7 +436,6 @@ public class UIManager : MonoBehaviour
             pickBorder(2);
         }
     }
-
     private void BronzePickSelect()
     {
         if (bronzePickOwned == true)
@@ -434,7 +445,6 @@ public class UIManager : MonoBehaviour
             pickBorder(3);
         }
     }
-
     private void IronPickSelect()
     {
         if (ironPickOwned == true)
@@ -444,7 +454,6 @@ public class UIManager : MonoBehaviour
             pickBorder(4);
         }
     }
-
     private void SteelPickSelect()
     {
         if (steelPickOwned == true)
@@ -454,7 +463,6 @@ public class UIManager : MonoBehaviour
             pickBorder(5);
         }
     }
-
     private void TitaniumPickSelect()
     {
         if (titaniumPickOwned == true)
@@ -480,7 +488,16 @@ public class UIManager : MonoBehaviour
                 drillPartInventorySlots.Add(newSlot);
             }
         }
-        drillPartInventorySlots[index].style.backgroundImage = new StyleBackground(partSprite);
+        VisualElement part = new();
+        part.style.position = Position.Absolute;
+        part.style.width = drillSlotWidth;
+        part.style.height = drillSlotHeight;
+        part.style.left = drillPartInventorySlots[index].resolvedStyle.left;
+        part.style.top = drillPartInventorySlots[index].parent.resolvedStyle.top;
+        Debug.Log(part.style.top);
+        part.style.backgroundImage = new StyleBackground(partSprite);
+        drillPartInventory.Add(part);
+        DragAndDropManipulator drag = new(part, drillPartInventory);
     }
 
     // Update is called once per frame

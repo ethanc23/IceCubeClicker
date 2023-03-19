@@ -32,6 +32,9 @@
     background-color: rgb(32, 32, 32);
 }
 
+.drillPart {
+}
+
 .upgradesNum {
     background-color: rgb(88, 88, 88);
     left: 2px;

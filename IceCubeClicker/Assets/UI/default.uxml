@@ -135,6 +135,7 @@
                             <ui:VisualElement class="drillInventorySlot" />
                             <ui:VisualElement class="drillInventorySlot" />
                         </ui:VisualElement>
+                        <ui:VisualElement class="drillPart" style="position: absolute;" />
                     </ui:ScrollView>
                 </ui:VisualElement>
             </ui:VisualElement>
