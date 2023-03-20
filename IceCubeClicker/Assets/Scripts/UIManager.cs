@@ -8,13 +8,17 @@ using UnityEngine.UIElements;
 using System.Linq;
 using Unity.VisualScripting.FullSerializer;
 using Unity.Mathematics;
+using UnityEngine.InputSystem;
+using static UnityEngine.GraphicsBuffer;
+using UnityEditor.SearchService;
+using System.Diagnostics;
+using Debug = UnityEngine.Debug;
 
 public class UIManager : MonoBehaviour
 {
     [SerializeField] private Upgrades upgrades;
     [SerializeField] private IceCube iceCube;
     [SerializeField] private Drill drill;
-    [SerializeField] private DragAndDropManipulator dragAndDropManipulator;
     [SerializeField] private Sprite[] pickaxeSprites;
 
     private VisualElement background;
@@ -84,6 +88,9 @@ public class UIManager : MonoBehaviour
     private VisualElement motorSlot;
     private VisualElement gearboxSlot;
 
+    private VisualElement drillPopup;
+    private Button drillPopupButton;
+
     private StyleLength drillSlotWidth;
     private StyleLength drillSlotHeight;
 
@@ -107,6 +114,8 @@ public class UIManager : MonoBehaviour
     void Start()
     {
         var root = GetComponent<UIDocument>().rootVisualElement;
+
+        background = root.Q<VisualElement>("Background");
 
         pickaxeWindow = root.Q<VisualElement>("pickaxeWindow");
 
@@ -170,6 +179,9 @@ public class UIManager : MonoBehaviour
         motorSlot = root.Q<VisualElement>("motorSlot");
         gearboxSlot = root.Q<VisualElement>("gearboxSlot");
 
+        drillPopup = root.Q<VisualElement>("drillPopup");
+        drillPopupButton = root.Q<Button>("drillPopupButton");
+
         drillButton.clicked += DrillWindow;
         drillClose.clicked += DrillWindow;
         upgradesButton.clicked += UpgradesWindow;
@@ -208,6 +220,7 @@ public class UIManager : MonoBehaviour
         up.visible = false;
         down.visible = false;
         drillButton.visible = false;
+        //drillPopup.visible = false;
 
         liftCost = 25;
 
@@ -234,19 +247,32 @@ public class UIManager : MonoBehaviour
         ironPickBuy.text = ironPickCost.ToString();
         steelPickBuy.text = steelPickCost.ToString();
         titaniumPickBuy.text = titaniumPickCost.ToString();
-
         background = root.Q<VisualElement>("Background");
         background.RegisterCallback<GeometryChangedEvent>(GeometryChangedCallback);
     }
 
-    private void GeometryChangedCallback(GeometryChangedEvent evt)
+private void GeometryChangedCallback(GeometryChangedEvent evt)
+{
+    background.UnregisterCallback<GeometryChangedEvent>(GeometryChangedCallback);
+
+    drillSlotWidth = drillPartInventorySlots[0].resolvedStyle.width;
+    drillSlotHeight = drillPartInventorySlots[0].resolvedStyle.height;
+}
+
+public void DrillPopup(Vector2 clickPos)
     {
-        background.UnregisterCallback<GeometryChangedEvent>(GeometryChangedCallback);
-
-        drillSlotWidth = drillPartInventorySlots[0].resolvedStyle.width;
-        drillSlotHeight = drillPartInventorySlots[0].resolvedStyle.height;
+        if (drillWindow.LocalToWorld(drillWindow.contentRect).Contains(clickPos))
+        {
+            int closestSlotIndex = FindClosestSlotIndex(drillPartInventorySlots, clickPos);
+            Debug.Log(closestSlotIndex);
+            Debug.Log(drill.partInventory.Count);
+            if (closestSlotIndex <= drill.partInventory.Count)
+            {
+                drillPopup.visible = true;
+                drillPopup.transform.position = clickPos;
+            }             
+        }
     }
-
 
     private void DrillWindow()
     {
@@ -268,6 +294,26 @@ public class UIManager : MonoBehaviour
                 drillButton.text = "Drill";
             }
         }
+    }
+
+    private int FindClosestSlotIndex(List<VisualElement> slots, Vector2 objectPos)
+    {
+        float bestDistanceSq = float.MaxValue;
+        int closestIndex = 0;
+        for (int i = 0; i < slots.Count; i++) 
+        {
+            VisualElement slot = slots[i];
+            Vector2 slotWorldSpace = slot.parent.LocalToWorld(slot.layout.position);
+            Vector2 RootSpaceOfSlot = VisualElementExtensions.WorldToLocal(background, slotWorldSpace);
+            Vector2 displacement = RootSpaceOfSlot - objectPos;
+            float distanceSq = displacement.sqrMagnitude;
+            if (distanceSq < bestDistanceSq)
+            {
+                bestDistanceSq = distanceSq;
+                closestIndex = i;
+            }
+        }
+        return closestIndex;
     }
 
     private void UpgradesWindow()
@@ -494,10 +540,8 @@ public class UIManager : MonoBehaviour
         part.style.height = drillSlotHeight;
         part.style.left = drillPartInventorySlots[index].resolvedStyle.left;
         part.style.top = drillPartInventorySlots[index].parent.resolvedStyle.top;
-        Debug.Log(part.style.top);
         part.style.backgroundImage = new StyleBackground(partSprite);
         drillPartInventory.Add(part);
-        DragAndDropManipulator drag = new(part, drillPartInventory);
     }
 
     // Update is called once per frame

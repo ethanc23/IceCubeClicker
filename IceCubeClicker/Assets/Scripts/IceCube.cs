@@ -18,8 +18,6 @@ public class IceCube : MonoBehaviour
 
     private bool shaking;
 
-    private Controls ctrl;
-
     [SerializeField] private DamagePopupManager damagePopupManager;
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private Sprite[] iceCubeSprites;
@@ -50,21 +48,8 @@ public class IceCube : MonoBehaviour
 
     void Awake()
     {
-        ctrl = new Controls();
         spriteRenderer.sprite = iceCubeSprites[0];
         InvokeRepeating(nameof(AutoMine), 1.0f, autoMineTickrate);
-    }
-
-    private void OnEnable()
-    {
-        ctrl.Enable();
-        ctrl.Default.LeftClick.performed += Click;
-    }
-
-    private void OnDisable()
-    {
-        ctrl.Disable();
-        ctrl.Default.LeftClick.performed -= Click;
     }
 
     public void SetCube()
@@ -76,9 +61,8 @@ public class IceCube : MonoBehaviour
         healthBar.setHp(hp);
     }
 
-    public void Click(InputAction.CallbackContext context)
+    public void Click(Vector2 mousePos)
     {
-        Vector2 mousePos = ctrl.Default.MousePos.ReadValue<Vector2>();
         Ray ray = Camera.main.ScreenPointToRay(mousePos);
         RaycastHit2D hit = Physics2D.GetRayIntersection(ray);
         if (hit.collider != null)

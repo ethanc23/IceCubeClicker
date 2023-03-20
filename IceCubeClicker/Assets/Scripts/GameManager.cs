@@ -1,11 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; set; }
+
+    [SerializeField] private IceCube iceCube;
+    [SerializeField] private UIManager uiManager;
+
+    private Controls ctrl;
 
     public int ice;
     public int height;
@@ -46,6 +52,8 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        ctrl = new Controls();
+
         ice = 100000;
         height = 0;
         maxHeight = 0;
@@ -66,6 +74,19 @@ public class GameManager : MonoBehaviour
         pickaxePowers[6] = 2000;
 
         autoMineDamage = 0;
+
+        ctrl.Default.LeftClick.performed += LeftClick;
+        ctrl.Default.RightClick.performed += RightClick;
+        ctrl.Enable();
+    }
+
+    private void LeftClick(InputAction.CallbackContext context)
+    {
+        iceCube.Click(ctrl.Default.MousePos.ReadValue<Vector2>());
+    }
+    private void RightClick(InputAction.CallbackContext context)
+    {
+        uiManager.DrillPopup(new Vector2(Screen.width, Screen.height) - ctrl.Default.MousePos.ReadValue<Vector2>());
     }
 
     // Update is called once per frame

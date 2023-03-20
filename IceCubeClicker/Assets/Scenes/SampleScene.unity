@@ -243,6 +243,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec9f6d7ba2a22e14793a614cc01960e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  iceCube: {fileID: 870300173}
+  uiManager: {fileID: 1351389383}
   ice: 0
   height: 0
   maxHeight: 0

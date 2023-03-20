@@ -135,8 +135,10 @@
                             <ui:VisualElement class="drillInventorySlot" />
                             <ui:VisualElement class="drillInventorySlot" />
                         </ui:VisualElement>
-                        <ui:VisualElement class="drillPart" style="position: absolute;" />
                     </ui:ScrollView>
+                    <ui:VisualElement name="drillPopup" style="position: absolute; width: 10%; height: 10%; top: 55px; left: 958px; background-color: rgb(24, 24, 24);">
+                        <ui:Button text="Button" display-tooltip-when-elided="true" name="drillPopupButton" style="margin-left: 0; margin-right: 0; margin-top: 5%; margin-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; border-top-left-radius: 0; border-bottom-left-radius: 0; border-top-right-radius: 0; border-bottom-right-radius: 0; border-left-width: 0; border-right-width: 0; border-top-width: 0; border-bottom-width: 0; background-color: rgba(24, 24, 24, 255); width: 100%; height: 40%;" />
+                    </ui:VisualElement>
                 </ui:VisualElement>
             </ui:VisualElement>
         </ui:VisualElement>
