@@ -92,7 +92,7 @@
                 <ui:VisualElement style="width: 100%; height: 5%; align-items: flex-end; background-color: rgb(24, 24, 24);">
                     <ui:Button text="X" display-tooltip-when-elided="true" name="drillExit" style="position: relative; top: auto; left: auto; height: 100%; width: 5%; font-size: 24px; right: 0; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0;" />
                 </ui:VisualElement>
-                <ui:VisualElement style="width: 100%; height: 95%; flex-direction: row;">
+                <ui:VisualElement name="drillWindowContent" style="width: 100%; height: 95%; flex-direction: row;">
                     <ui:VisualElement name="VisualElement" style="width: 60%; height: 100%; flex-direction: row; align-items: center;">
                         <ui:VisualElement style="width: 25%; height: 100%;">
                             <ui:VisualElement name="batterySlot" class="drillSlot" />
@@ -136,8 +136,8 @@
                             <ui:VisualElement class="drillInventorySlot" />
                         </ui:VisualElement>
                     </ui:ScrollView>
-                    <ui:VisualElement name="drillPopup" style="position: absolute; width: 10%; height: 10%; top: 55px; left: 958px; background-color: rgb(24, 24, 24);">
-                        <ui:Button text="Button" display-tooltip-when-elided="true" name="drillPopupButton" style="margin-left: 0; margin-right: 0; margin-top: 5%; margin-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; border-top-left-radius: 0; border-bottom-left-radius: 0; border-top-right-radius: 0; border-bottom-right-radius: 0; border-left-width: 0; border-right-width: 0; border-top-width: 0; border-bottom-width: 0; background-color: rgba(24, 24, 24, 255); width: 100%; height: 40%;" />
+                    <ui:VisualElement name="drillPopup" style="position: absolute; width: 10%; height: 10%; top: initial; left: initial; background-color: rgb(24, 24, 24); visibility: visible; translate: 0 0;">
+                        <ui:Button text="Button" display-tooltip-when-elided="true" name="drillPopupButton" style="margin-left: 0; margin-right: 0; margin-top: 5%; margin-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; border-top-left-radius: 0; border-bottom-left-radius: 0; border-top-right-radius: 0; border-bottom-right-radius: 0; border-left-width: 0; border-right-width: 0; border-top-width: 0; border-bottom-width: 0; background-color: rgb(24, 24, 24); width: 100%; height: 40%;" />
                     </ui:VisualElement>
                 </ui:VisualElement>
             </ui:VisualElement>

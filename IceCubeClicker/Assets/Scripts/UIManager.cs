@@ -29,6 +29,7 @@ public class UIManager : MonoBehaviour
     private Label height;
 
     private VisualElement drillWindow;
+    private VisualElement drillWindowContent;
     private Button drillButton;
     private Button drillClose;
     private Button upgradesButton;
@@ -123,6 +124,7 @@ public class UIManager : MonoBehaviour
         height = root.Q<Label>("heightLabel");
 
         drillWindow = root.Q<VisualElement>("drillWindow");
+        drillWindowContent = root.Q<VisualElement>("drillWindowContent");
         drillButton = root.Q<Button>("drillButton");
         drillClose = root.Q<Button>("drillExit");
         upgradesButton = root.Q<Button>("upgradesButton");
@@ -251,27 +253,35 @@ public class UIManager : MonoBehaviour
         background.RegisterCallback<GeometryChangedEvent>(GeometryChangedCallback);
     }
 
-private void GeometryChangedCallback(GeometryChangedEvent evt)
-{
-    background.UnregisterCallback<GeometryChangedEvent>(GeometryChangedCallback);
-
-    drillSlotWidth = drillPartInventorySlots[0].resolvedStyle.width;
-    drillSlotHeight = drillPartInventorySlots[0].resolvedStyle.height;
-}
-
-public void DrillPopup(Vector2 clickPos)
+    private void GeometryChangedCallback(GeometryChangedEvent evt)
     {
+        background.UnregisterCallback<GeometryChangedEvent>(GeometryChangedCallback);
+
+        drillSlotWidth = drillPartInventorySlots[0].resolvedStyle.width;
+        drillSlotHeight = drillPartInventorySlots[0].resolvedStyle.height;
+    }
+
+    public void DrillPopup(Vector2 clickPos)
+    {
+        Vector2 localMousePos = VisualElementExtensions.WorldToLocal(drillWindowContent, new Vector2(clickPos.x, Screen.height - clickPos.y)) / 2;
+        //Debug.Log()
+        //Debug.Log(localMousePos);
         if (drillWindow.LocalToWorld(drillWindow.contentRect).Contains(clickPos))
         {
-            int closestSlotIndex = FindClosestSlotIndex(drillPartInventorySlots, clickPos);
+            /*int closestSlotIndex = FindClosestSlotIndex(drillPartInventorySlots, clickPos);
             Debug.Log(closestSlotIndex);
-            Debug.Log(drill.partInventory.Count);
-            if (closestSlotIndex <= drill.partInventory.Count)
+            if (closestSlotIndex <= drillPartInventorySlots.Count)
             {
                 drillPopup.visible = true;
-                drillPopup.transform.position = clickPos;
-            }             
+                drillPopup.BringToFront();
+                drillPopup.transform.position = drillWindow.WorldToLocal(GameManager.Instance.screenDimensions - clickPos);
+                Debug.Log(drillPopup.transform.position);
+            }*/
+            
         }
+        drillPopup.style.left = localMousePos.x;
+        drillPopup.style.top = localMousePos.y;
+        //Debug.Log(drillPopup.transform.position);
     }
 
     private void DrillWindow()
@@ -304,7 +314,9 @@ public void DrillPopup(Vector2 clickPos)
         {
             VisualElement slot = slots[i];
             Vector2 slotWorldSpace = slot.parent.LocalToWorld(slot.layout.position);
+            //Debug.Log(slotWorldSpace);
             Vector2 RootSpaceOfSlot = VisualElementExtensions.WorldToLocal(background, slotWorldSpace);
+            //Debug.Log(RootSpaceOfSlot);
             Vector2 displacement = RootSpaceOfSlot - objectPos;
             float distanceSq = displacement.sqrMagnitude;
             if (distanceSq < bestDistanceSq)

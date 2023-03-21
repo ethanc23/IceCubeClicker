@@ -12,7 +12,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private UIManager uiManager;
 
     private Controls ctrl;
-
+    
     public int ice;
     public int height;
     public int maxHeight;
@@ -86,7 +86,7 @@ public class GameManager : MonoBehaviour
     }
     private void RightClick(InputAction.CallbackContext context)
     {
-        uiManager.DrillPopup(new Vector2(Screen.width, Screen.height) - ctrl.Default.MousePos.ReadValue<Vector2>());
+        uiManager.DrillPopup(ctrl.Default.MousePos.ReadValue<Vector2>());
     }
 
     // Update is called once per frame
