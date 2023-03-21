@@ -261,27 +261,30 @@ public class UIManager : MonoBehaviour
         drillSlotHeight = drillPartInventorySlots[0].resolvedStyle.height;
     }
 
-    public void DrillPopup(Vector2 clickPos)
+    public void OpenDrillPopup(Vector2 clickPos)
     {
-        Vector2 localMousePos = VisualElementExtensions.WorldToLocal(drillWindowContent, new Vector2(clickPos.x, Screen.height - clickPos.y)) / 2;
-        //Debug.Log()
-        //Debug.Log(localMousePos);
-        if (drillWindow.LocalToWorld(drillWindow.contentRect).Contains(clickPos))
+        Vector2 localMousePos = VisualElementExtensions.WorldToLocal(drillWindowContent, new Vector2(clickPos.x, (Screen.height - clickPos.y)));
+        
+        if (drillWindowContent.ContainsPoint(localMousePos))
         {
-            /*int closestSlotIndex = FindClosestSlotIndex(drillPartInventorySlots, clickPos);
-            Debug.Log(closestSlotIndex);
-            if (closestSlotIndex <= drillPartInventorySlots.Count)
+            if (drillPartInventory.ChangeCoordinatesTo(drillWindowContent, drillPartInventory.contentRect).Contains(localMousePos))
             {
-                drillPopup.visible = true;
-                drillPopup.BringToFront();
-                drillPopup.transform.position = drillWindow.WorldToLocal(GameManager.Instance.screenDimensions - clickPos);
-                Debug.Log(drillPopup.transform.position);
-            }*/
+                int closestSlotIndex = FindClosestSlotIndex(drillPartInventorySlots, localMousePos);
+                Debug.Log(closestSlotIndex);
+                if (closestSlotIndex <= drillPartInventorySlots.Count)
+                {
+                    drillPopup.visible = true;
+                }
+            }
             
         }
         drillPopup.style.left = localMousePos.x;
         drillPopup.style.top = localMousePos.y;
-        //Debug.Log(drillPopup.transform.position);
+    }
+    public void CloseDrillPopup(Vector2 clickPos)
+    {
+        Vector2 localMousePos = VisualElementExtensions.WorldToLocal(drillPopup, new Vector2(clickPos.x, (Screen.height - clickPos.y)));
+        if (!drillWindowContent.ContainsPoint(localMousePos)) { drillPopup.visible = false; }
     }
 
     private void DrillWindow()
