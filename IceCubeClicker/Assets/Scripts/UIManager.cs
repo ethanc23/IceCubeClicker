@@ -279,7 +279,7 @@ public class UIManager : MonoBehaviour
             
         }
         drillPopup.style.left = localMousePos.x;
-        drillPopup.style.top = localMousePos.y;
+        drillPopup.style.bottom = localMousePos.y;
     }
     public void CloseDrillPopup(Vector2 clickPos)
     {
