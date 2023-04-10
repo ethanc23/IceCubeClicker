@@ -87,7 +87,7 @@ public class GameManager : MonoBehaviour
     }
     private void RightClick(InputAction.CallbackContext context)
     {
-        uiManager.OpenDrillPopup(ctrl.Default.MousePos.ReadValue<Vector2>());
+        //uiManager.OpenDrillPopup(ctrl.Default.MousePos.ReadValue<Vector2>());
     }
 
     // Update is called once per frame

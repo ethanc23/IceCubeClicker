@@ -13,6 +13,9 @@ using static UnityEngine.GraphicsBuffer;
 using UnityEditor.SearchService;
 using System.Diagnostics;
 using Debug = UnityEngine.Debug;
+using UnityEngine.Events;
+using Unity.VisualScripting.Antlr3.Runtime.Misc;
+using UnityEngine.Pool;
 
 public class UIManager : MonoBehaviour
 {
@@ -22,6 +25,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Sprite[] pickaxeSprites;
 
     private VisualElement background;
+
+    private VisualElement tooltipWindow;
 
     private VisualElement pickaxeWindow;
 
@@ -89,9 +94,6 @@ public class UIManager : MonoBehaviour
     private VisualElement motorSlot;
     private VisualElement gearboxSlot;
 
-    private VisualElement drillPopup;
-    private Button drillPopupButton;
-
     private StyleLength drillSlotWidth;
     private StyleLength drillSlotHeight;
 
@@ -117,6 +119,8 @@ public class UIManager : MonoBehaviour
         var root = GetComponent<UIDocument>().rootVisualElement;
 
         background = root.Q<VisualElement>("Background");
+
+        tooltipWindow = root.Q<VisualElement>("tooltipWindow");
 
         pickaxeWindow = root.Q<VisualElement>("pickaxeWindow");
 
@@ -180,9 +184,6 @@ public class UIManager : MonoBehaviour
         batterySlot = root.Q<VisualElement>("batterySlot");
         motorSlot = root.Q<VisualElement>("motorSlot");
         gearboxSlot = root.Q<VisualElement>("gearboxSlot");
-
-        drillPopup = root.Q<VisualElement>("drillPopup");
-        drillPopupButton = root.Q<Button>("drillPopupButton");
 
         drillButton.clicked += DrillWindow;
         drillClose.clicked += DrillWindow;
@@ -251,6 +252,28 @@ public class UIManager : MonoBehaviour
         titaniumPickBuy.text = titaniumPickCost.ToString();
         background = root.Q<VisualElement>("Background");
         background.RegisterCallback<GeometryChangedEvent>(GeometryChangedCallback);
+        drillWindowContent.RegisterCallback<MouseOutEvent>(UnhoverCallback);
+        drillWindowContent.RegisterCallback<MouseOverEvent>(HoverCallback);
+    }
+    
+    private void UnhoverCallback(MouseOutEvent evt)
+    {
+        var target = evt.target;
+        if (target.GetType() == typeof(ScrollView)) return;
+        VisualElement visualElement = (VisualElement)target;
+        //if(visualElement.name == "")
+        tooltipWindow.visible = false;
+        Debug.Log("out");
+    }
+
+    private void HoverCallback(MouseOverEvent evt)
+    {
+        var target = evt.target;
+        if (target.GetType() != typeof(VisualElement)) return;
+        VisualElement visualElement = (VisualElement)target;
+        if (!visualElement.ClassListContains("drillInventorySlot")) return;
+        OpenTooltip(visualElement);
+        Debug.Log("in");
     }
 
     private void GeometryChangedCallback(GeometryChangedEvent evt)
@@ -261,30 +284,19 @@ public class UIManager : MonoBehaviour
         drillSlotHeight = drillPartInventorySlots[0].resolvedStyle.height;
     }
 
-    public void OpenDrillPopup(Vector2 clickPos)
+    private void OpenTooltip(VisualElement element)
     {
-        Vector2 localMousePos = VisualElementExtensions.WorldToLocal(drillWindowContent, new Vector2(clickPos.x, (Screen.height - clickPos.y)));
-        
-        if (drillWindowContent.ContainsPoint(localMousePos))
-        {
-            if (drillPartInventory.ChangeCoordinatesTo(drillWindowContent, drillPartInventory.contentRect).Contains(localMousePos))
-            {
-                int closestSlotIndex = FindClosestSlotIndex(drillPartInventorySlots, localMousePos);
-                Debug.Log(closestSlotIndex);
-                if (closestSlotIndex <= drillPartInventorySlots.Count)
-                {
-                    drillPopup.visible = true;
-                }
-            }
-            
-        }
-        drillPopup.style.left = localMousePos.x;
-        drillPopup.style.bottom = localMousePos.y;
+        Vector2 elementPos = element.parent.LocalToWorld(new Vector2(element.resolvedStyle.left, element.resolvedStyle.top));
+        tooltipWindow.style.left = elementPos.x;
+        tooltipWindow.style.top = elementPos.y;
+        tooltipWindow.style.width = 100;
+        tooltipWindow.style.height = 100;
+        tooltipWindow.visible = true;
     }
     public void CloseDrillPopup(Vector2 clickPos)
     {
-        Vector2 localMousePos = VisualElementExtensions.WorldToLocal(drillPopup, new Vector2(clickPos.x, (Screen.height - clickPos.y)));
-        if (!drillWindowContent.ContainsPoint(localMousePos)) { drillPopup.visible = false; }
+        //Vector2 localMousePos = VisualElementExtensions.WorldToLocal(drillPopup, new Vector2(clickPos.x, (Screen.height - clickPos.y)));
+        //if (!drillWindowContent.ContainsPoint(localMousePos)) { drillPopup.visible = false; }
     }
 
     private void DrillWindow()
