@@ -98,3 +98,35 @@
 
 .hasTooltip {
 }
+
+.drillPartTooltip {
+    border-left-width: 1px;
+    border-right-width: 1px;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+    border-left-color: rgba(64, 64, 64, 255);
+    border-right-color: rgba(64, 64, 64, 255);
+    border-top-color: rgba(64, 64, 64, 255);
+    border-bottom-color: rgba(64, 64, 64, 255);
+    width: 20%;
+    height: 40%;
+    background-color: rgba(32, 32, 32, 255);
+    align-items: center;
+}
+
+.drillPartTooltipName {
+    -unity-text-align: upper-center;
+    color: rgba(255, 255, 255, 255);
+    -unity-font-style: bold;
+}
+
+.drillPartTooltipImage {
+    width: 20%;
+    height: 40%;
+    background-image: url('project://database/Assets/Sprites/Drill/Battery.png?fileID=21300000&guid=cc60b0ab04698284dbe1f28853863b4f&type=3#Battery');
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+.drillPartTooltipModifier {
+    color: rgba(255, 255, 255, 255);
+}

@@ -83,7 +83,7 @@ public class GameManager : MonoBehaviour
     private void LeftClick(InputAction.CallbackContext context)
     {
         iceCube.Click(ctrl.Default.MousePos.ReadValue<Vector2>());
-        uiManager.CloseDrillPopup(ctrl.Default.MousePos.ReadValue<Vector2>());
+        //uiManager.CloseDrillPopup(ctrl.Default.MousePos.ReadValue<Vector2>());
     }
     private void RightClick(InputAction.CallbackContext context)
     {

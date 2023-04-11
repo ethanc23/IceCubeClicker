@@ -17,6 +17,7 @@ using UnityEngine.Events;
 using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine.Pool;
 using Packages.Rider.Editor.UnitTesting;
+using UnityEditor.ShaderKeywordFilter;
 
 public class UIManager : MonoBehaviour
 {
@@ -262,13 +263,15 @@ public class UIManager : MonoBehaviour
         VisualElement target = (VisualElement)evt.target;
         if (!target.ClassListContains("hasTooltip")) return;
         tooltipWindow.visible = false;
+        tooltipWindow.Clear();
+        tooltipWindow.ClearClassList();
     }
 
     private void HoverCallback(MouseOverEvent evt)
     {
         VisualElement target = (VisualElement)evt.target;
         if (!target.ClassListContains("hasTooltip")) return;
-        OpenTooltip(target);
+        OpenDrillPartTooltip(target, GetPartIndex(target));
     }
 
     private void GeometryChangedCallback(GeometryChangedEvent evt)
@@ -279,10 +282,11 @@ public class UIManager : MonoBehaviour
         drillSlotHeight = drillPartInventorySlots[0].resolvedStyle.height;
     }
 
-    private void OpenTooltip(VisualElement element)
+    private void OpenDrillPartTooltip(VisualElement element, Drill.Part part)
     {
-        int width = 100;
-        int height = 100;
+
+        tooltipWindow.AddToClassList("drillPartTooltip");
+        float width = tooltipWindow.resolvedStyle.width;
         Vector2 elementTopLeft = element.parent.LocalToWorld(new Vector2(element.resolvedStyle.left, element.resolvedStyle.top));
         Vector2 elementBottomRight = element.parent.LocalToWorld(new Vector2(element.resolvedStyle.right, element.resolvedStyle.bottom));
         if (elementTopLeft.x - width < 0)
@@ -297,14 +301,40 @@ public class UIManager : MonoBehaviour
         }
         tooltipWindow.style.top = elementTopLeft.y;
 
-        tooltipWindow.style.width = width;
-        tooltipWindow.style.height = height;
+        Label name = new();
+        name.AddToClassList("drillPartTooltipName");
+        name.text = part.name;
+        VisualElement image = new();
+        image.AddToClassList("drillPartTooltipImage");
+        image.style.backgroundImage = new(part.sprite);
+        Label modifier1 = new();
+        modifier1.AddToClassList("drillPartTooltipModifier");
+        modifier1.text = part.implicit1.type.ToString() + ": " + part.implicit1.value.ToString();
+        Label modifier2 = new();
+        modifier2.AddToClassList("drillPartTooltipModifier");
+        modifier2.text = part.implicit2.type.ToString() + ": " + part.implicit2.value.ToString();
+        tooltipWindow.Add(name);
+        tooltipWindow.Add(image);
+        tooltipWindow.Add(modifier1);
+        tooltipWindow.Add(modifier2);
+
         tooltipWindow.visible = true;
     }
-    public void CloseDrillPopup(Vector2 clickPos)
+
+    private Drill.Part GetPartIndex(VisualElement element)
     {
-        //Vector2 localMousePos = VisualElementExtensions.WorldToLocal(drillPopup, new Vector2(clickPos.x, (Screen.height - clickPos.y)));
-        //if (!drillWindowContent.ContainsPoint(localMousePos)) { drillPopup.visible = false; }
+        switch (element.name)
+        {
+            case "drillBitSlot": return drill.drillParts[0];
+            case "batterySlot": return drill.drillParts[1];
+            case "motorSlot": return drill.drillParts[2];
+            case "gearboxSlot": return drill.drillParts[3];
+        }
+        for (int i = 0; i < drill.partInventory.Count; ++i)
+        {
+            if (element == drillPartInventory.ElementAt(i)) return drill.partInventory[i];
+        }
+        return null;
     }
 
     private void DrillWindow()
@@ -555,7 +585,7 @@ public class UIManager : MonoBehaviour
         part.style.top = drillPartInventorySlots[index].parent.resolvedStyle.top;
         part.style.backgroundImage = new StyleBackground(partSprite);
         part.AddToClassList("hasTooltip");
-        drillPartInventory.Add(part);
+        drillPartInventory.ElementAt(index).Add(part);
     }
 
     // Update is called once per frame
