@@ -16,6 +16,7 @@ using Debug = UnityEngine.Debug;
 using UnityEngine.Events;
 using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine.Pool;
+using Packages.Rider.Editor.UnitTesting;
 
 public class UIManager : MonoBehaviour
 {
@@ -258,22 +259,16 @@ public class UIManager : MonoBehaviour
     
     private void UnhoverCallback(MouseOutEvent evt)
     {
-        var target = evt.target;
-        if (target.GetType() == typeof(ScrollView)) return;
-        VisualElement visualElement = (VisualElement)target;
-        //if(visualElement.name == "")
+        VisualElement target = (VisualElement)evt.target;
+        if (!target.ClassListContains("hasTooltip")) return;
         tooltipWindow.visible = false;
-        Debug.Log("out");
     }
 
     private void HoverCallback(MouseOverEvent evt)
     {
-        var target = evt.target;
-        if (target.GetType() != typeof(VisualElement)) return;
-        VisualElement visualElement = (VisualElement)target;
-        if (!visualElement.ClassListContains("drillInventorySlot")) return;
-        OpenTooltip(visualElement);
-        Debug.Log("in");
+        VisualElement target = (VisualElement)evt.target;
+        if (!target.ClassListContains("hasTooltip")) return;
+        OpenTooltip(target);
     }
 
     private void GeometryChangedCallback(GeometryChangedEvent evt)
@@ -286,11 +281,24 @@ public class UIManager : MonoBehaviour
 
     private void OpenTooltip(VisualElement element)
     {
-        Vector2 elementPos = element.parent.LocalToWorld(new Vector2(element.resolvedStyle.left, element.resolvedStyle.top));
-        tooltipWindow.style.left = elementPos.x;
-        tooltipWindow.style.top = elementPos.y;
-        tooltipWindow.style.width = 100;
-        tooltipWindow.style.height = 100;
+        int width = 100;
+        int height = 100;
+        Vector2 elementTopLeft = element.parent.LocalToWorld(new Vector2(element.resolvedStyle.left, element.resolvedStyle.top));
+        Vector2 elementBottomRight = element.parent.LocalToWorld(new Vector2(element.resolvedStyle.right, element.resolvedStyle.bottom));
+        if (elementTopLeft.x - width < 0)
+        { 
+            tooltipWindow.style.left = elementBottomRight.x + element.resolvedStyle.width;
+            tooltipWindow.style.right = StyleKeyword.Null;
+        }
+        else
+        { 
+            tooltipWindow.style.right = Screen.width - elementTopLeft.x;
+            tooltipWindow.style.left = StyleKeyword.Null;
+        }
+        tooltipWindow.style.top = elementTopLeft.y;
+
+        tooltipWindow.style.width = width;
+        tooltipWindow.style.height = height;
         tooltipWindow.visible = true;
     }
     public void CloseDrillPopup(Vector2 clickPos)
@@ -319,28 +327,6 @@ public class UIManager : MonoBehaviour
                 drillButton.text = "Drill";
             }
         }
-    }
-
-    private int FindClosestSlotIndex(List<VisualElement> slots, Vector2 objectPos)
-    {
-        float bestDistanceSq = float.MaxValue;
-        int closestIndex = 0;
-        for (int i = 0; i < slots.Count; i++) 
-        {
-            VisualElement slot = slots[i];
-            Vector2 slotWorldSpace = slot.parent.LocalToWorld(slot.layout.position);
-            //Debug.Log(slotWorldSpace);
-            Vector2 RootSpaceOfSlot = VisualElementExtensions.WorldToLocal(background, slotWorldSpace);
-            //Debug.Log(RootSpaceOfSlot);
-            Vector2 displacement = RootSpaceOfSlot - objectPos;
-            float distanceSq = displacement.sqrMagnitude;
-            if (distanceSq < bestDistanceSq)
-            {
-                bestDistanceSq = distanceSq;
-                closestIndex = i;
-            }
-        }
-        return closestIndex;
     }
 
     private void UpgradesWindow()
@@ -568,6 +554,7 @@ public class UIManager : MonoBehaviour
         part.style.left = drillPartInventorySlots[index].resolvedStyle.left;
         part.style.top = drillPartInventorySlots[index].parent.resolvedStyle.top;
         part.style.backgroundImage = new StyleBackground(partSprite);
+        part.AddToClassList("hasTooltip");
         drillPartInventory.Add(part);
     }
 
