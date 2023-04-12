@@ -41,7 +41,7 @@ public class IceCube : MonoBehaviour
 
     private void AutoMine()
     {
-        hp -= (int)(autoMineTickrate * GameManager.Instance.autoMineDamage);
+        hp -= (int)(autoMineTickrate * (GameManager.Instance.autoMineDamage + GameManager.Instance.drillDamage));
         healthBar.setHp(hp);
         CheckCubeHp();
     }

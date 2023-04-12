@@ -18,6 +18,7 @@ using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine.Pool;
 using Packages.Rider.Editor.UnitTesting;
 using UnityEditor.ShaderKeywordFilter;
+using UnityEditor.PackageManager.UI;
 
 public class UIManager : MonoBehaviour
 {
@@ -112,8 +113,6 @@ public class UIManager : MonoBehaviour
     private bool ironPickOwned;
     private bool steelPickOwned;
     private bool titaniumPickOwned;
-
-    private bool drillOwned;
 
     // Start is called before the first frame update
     void Start()
@@ -234,7 +233,7 @@ public class UIManager : MonoBehaviour
         bronzePickCost = 1000;
         ironPickCost = 5000;
         steelPickCost = 10000;
-        titaniumPickCost = 1000000;
+        titaniumPickCost = 100000;
 
         stonePickOwned = false;
         copperPickOwned = false;
@@ -243,7 +242,6 @@ public class UIManager : MonoBehaviour
         steelPickOwned = false;
         titaniumPickOwned = false;
 
-        drillOwned = false;
         drillButton.text = "Drill: 1000 ice";
 
         stonePickBuy.text = stonePickCost.ToString();
@@ -289,16 +287,9 @@ public class UIManager : MonoBehaviour
         float width = tooltipWindow.resolvedStyle.width;
         Vector2 elementTopLeft = element.parent.LocalToWorld(new Vector2(element.resolvedStyle.left, element.resolvedStyle.top));
         Vector2 elementBottomRight = element.parent.LocalToWorld(new Vector2(element.resolvedStyle.right, element.resolvedStyle.bottom));
-        if (elementTopLeft.x - width < 0)
-        { 
-            tooltipWindow.style.left = elementBottomRight.x + element.resolvedStyle.width;
-            tooltipWindow.style.right = StyleKeyword.Null;
-        }
-        else
-        { 
-            tooltipWindow.style.right = Screen.width - elementTopLeft.x;
-            tooltipWindow.style.left = StyleKeyword.Null;
-        }
+        tooltipWindow.style.left = elementTopLeft.x - width < 0
+            ? tooltipWindow.style.left = elementBottomRight.x + element.resolvedStyle.width
+            : tooltipWindow.style.left = elementTopLeft.x - width;
         tooltipWindow.style.top = elementTopLeft.y;
 
         Label name = new();
@@ -335,7 +326,7 @@ public class UIManager : MonoBehaviour
 
     private void DrillWindow()
     {
-        if (drillOwned)
+        if (drill.drillOwned)
         {
             if (drillWindow.visible == false)
             {
@@ -348,7 +339,7 @@ public class UIManager : MonoBehaviour
         {
             if (GameManager.Instance.ice >= 1000)
             {
-                drillOwned = true;
+                drill.drillOwned = true;
                 GameManager.Instance.ice -= 1000;
                 drillButton.text = "Drill";
             }
@@ -558,7 +549,7 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public void partInventorySprite(Sprite partSprite, int index)
+    public void PartInventorySprite(Sprite partSprite, int index)
     {
         if (index >= drillPartInventorySlots.Count)
         {
@@ -574,15 +565,11 @@ public class UIManager : MonoBehaviour
             }
         }
         VisualElement part = new();
-        part.name = index.ToString();
-        part.style.position = Position.Absolute;
-        part.style.width = drillSlotWidth;
-        part.style.height = drillSlotHeight;
-        part.style.left = drillPartInventorySlots[index].resolvedStyle.left;
-        part.style.top = drillPartInventorySlots[index].parent.resolvedStyle.top;
         part.style.backgroundImage = new StyleBackground(partSprite);
+        part.name = index.ToString();
+        part.AddToClassList("drillPart");
         part.AddToClassList("hasTooltip");
-        drillPartInventory.ElementAt(Mathf.FloorToInt(index / 4)).Add(part);
+        drillPartInventory.ElementAt(Mathf.FloorToInt(index / 4)).ElementAt(index % 4).Add(part);
     }
 
     // Update is called once per frame

@@ -30,6 +30,7 @@
     margin-bottom: 25%;
     top: 6%;
     background-color: rgb(32, 32, 32);
+    -unity-background-scale-mode: scale-to-fit;
 }
 
 .upgradesNum {
@@ -104,20 +105,21 @@
     border-right-width: 1px;
     border-top-width: 1px;
     border-bottom-width: 1px;
-    border-left-color: rgba(64, 64, 64, 255);
-    border-right-color: rgba(64, 64, 64, 255);
-    border-top-color: rgba(64, 64, 64, 255);
-    border-bottom-color: rgba(64, 64, 64, 255);
+    border-left-color: rgb(64, 64, 64);
+    border-right-color: rgb(64, 64, 64);
+    border-top-color: rgb(64, 64, 64);
+    border-bottom-color: rgb(64, 64, 64);
     width: 20%;
     height: 40%;
-    background-color: rgba(32, 32, 32, 255);
+    background-color: rgb(32, 32, 32);
     align-items: center;
 }
 
 .drillPartTooltipName {
     -unity-text-align: upper-center;
-    color: rgba(255, 255, 255, 255);
+    color: rgb(255, 255, 255);
     -unity-font-style: bold;
+    width: 100%;
 }
 
 .drillPartTooltipImage {
@@ -128,5 +130,12 @@
 }
 
 .drillPartTooltipModifier {
-    color: rgba(255, 255, 255, 255);
+    color: rgb(255, 255, 255);
+}
+
+.drillPart {
+    background-image: url('project://database/Assets/Sprites/Drill/Battery.png?fileID=21300000&guid=cc60b0ab04698284dbe1f28853863b4f&type=3#Battery');
+    width: 100%;
+    height: 100%;
+    -unity-background-scale-mode: scale-to-fit;
 }

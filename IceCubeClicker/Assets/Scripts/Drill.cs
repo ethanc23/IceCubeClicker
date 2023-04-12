@@ -14,6 +14,11 @@ public class Drill : MonoBehaviour
 {
     [SerializeField] private UIManager uiManager;
     [SerializeField] private Sprite[] partSprites;
+
+    public bool drillOwned;
+
+    public int drillPower;
+
     public enum PartType
     {
         drillBit,
@@ -43,6 +48,9 @@ public class Drill : MonoBehaviour
             this.type = type;
         }
     }
+
+    private string[] implicit1Names = { "damaging", "battery efficient", "battery capacity", "speedy", "lucky", "icy" };
+    private string[] implicit2Names = { "damage", "battery efficiency", "battery", "speed", "luck", "extra ice" };
 
     public class Part
     {
@@ -78,21 +86,22 @@ public class Drill : MonoBehaviour
         int partType = Random.Range(0, 4);
         int implicit1Value = 1;
         int implicit2Value = 1;
-        int implicit1Type = Random.Range(0, 1);
-        int implicit2Type = Random.Range(0, 1);
-        string name = "foo";
+        int implicit1Type = Random.Range(0, 2);
+        int implicit2Type = Random.Range(0, 2);
+        string name = implicit1Names[(int)modifiers[partType,implicit1Type]] + " " + ((PartType)partType).ToString() + " of " + implicit2Names[(int)modifiers[partType, implicit2Type]];
         return new Part(name, partSprites[partType], (PartType)partType, new(implicit1Value, modifiers[partType, implicit1Type]), new(implicit2Value, modifiers[partType, implicit2Type]));
     }
 
     public void AddPartToInventory(Part part)
     {
         partInventory.Add(part);
-        uiManager.partInventorySprite(part.sprite, partInventory.Count - 1);
+        uiManager.PartInventorySprite(part.sprite, partInventory.Count - 1);
     }
 
     // Start is called before the first frame update
     void Start()
     {
+        drillOwned = false;
         drillParts[0] = new("Rusty DrillBit", partSprites[0], PartType.drillBit, new(1, ModifierType.damage), new(1, ModifierType.partDropChance));
         drillParts[1] = new("Rusty Battery", partSprites[1], PartType.battery, new(1, ModifierType.capacity), new(1, ModifierType.efficiency));
         drillParts[2] = new("Rusty Motor", partSprites[2], PartType.motor, new(1, ModifierType.damage), new(1, ModifierType.speed));
