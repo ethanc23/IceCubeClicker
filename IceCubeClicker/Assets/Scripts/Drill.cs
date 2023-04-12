@@ -80,7 +80,6 @@ public class Drill : MonoBehaviour
         int implicit2Value = 1;
         int implicit1Type = Random.Range(0, 1);
         int implicit2Type = Random.Range(0, 1);
-
         string name = "foo";
         return new Part(name, partSprites[partType], (PartType)partType, new(implicit1Value, modifiers[partType, implicit1Type]), new(implicit2Value, modifiers[partType, implicit2Type]));
     }

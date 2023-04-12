@@ -264,14 +264,15 @@ public class UIManager : MonoBehaviour
         if (!target.ClassListContains("hasTooltip")) return;
         tooltipWindow.visible = false;
         tooltipWindow.Clear();
-        tooltipWindow.ClearClassList();
+        //tooltipWindow.ClearClassList();
+        
     }
 
     private void HoverCallback(MouseOverEvent evt)
     {
         VisualElement target = (VisualElement)evt.target;
         if (!target.ClassListContains("hasTooltip")) return;
-        OpenDrillPartTooltip(target, GetPartIndex(target));
+        OpenDrillPartTooltip(target, GetPart(target));              
     }
 
     private void GeometryChangedCallback(GeometryChangedEvent evt)
@@ -284,7 +285,6 @@ public class UIManager : MonoBehaviour
 
     private void OpenDrillPartTooltip(VisualElement element, Drill.Part part)
     {
-
         tooltipWindow.AddToClassList("drillPartTooltip");
         float width = tooltipWindow.resolvedStyle.width;
         Vector2 elementTopLeft = element.parent.LocalToWorld(new Vector2(element.resolvedStyle.left, element.resolvedStyle.top));
@@ -321,7 +321,7 @@ public class UIManager : MonoBehaviour
         tooltipWindow.visible = true;
     }
 
-    private Drill.Part GetPartIndex(VisualElement element)
+    private Drill.Part GetPart(VisualElement element)
     {
         switch (element.name)
         {
@@ -330,11 +330,7 @@ public class UIManager : MonoBehaviour
             case "motorSlot": return drill.drillParts[2];
             case "gearboxSlot": return drill.drillParts[3];
         }
-        for (int i = 0; i < drill.partInventory.Count; ++i)
-        {
-            if (element == drillPartInventory.ElementAt(i)) return drill.partInventory[i];
-        }
-        return null;
+        return drill.partInventory[int.Parse(element.name)];
     }
 
     private void DrillWindow()
@@ -578,6 +574,7 @@ public class UIManager : MonoBehaviour
             }
         }
         VisualElement part = new();
+        part.name = index.ToString();
         part.style.position = Position.Absolute;
         part.style.width = drillSlotWidth;
         part.style.height = drillSlotHeight;
@@ -585,7 +582,7 @@ public class UIManager : MonoBehaviour
         part.style.top = drillPartInventorySlots[index].parent.resolvedStyle.top;
         part.style.backgroundImage = new StyleBackground(partSprite);
         part.AddToClassList("hasTooltip");
-        drillPartInventory.ElementAt(index).Add(part);
+        drillPartInventory.ElementAt(Mathf.FloorToInt(index / 4)).Add(part);
     }
 
     // Update is called once per frame
