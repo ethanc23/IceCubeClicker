@@ -54,7 +54,7 @@ public class GameManager : MonoBehaviour
     {
         ctrl = new Controls();
 
-        ice = 0;
+        ice = 100000;
         height = 0;
         maxHeight = 0;
         currentPickaxe = 0;

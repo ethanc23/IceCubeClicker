@@ -13,7 +13,7 @@ public class DamagePopupManager : MonoBehaviour
 
     public void NewPopup(string text, Vector2 pos, Color color)
     {
-        positionVariation = new Vector2(Random.Range(-0.25f, 0.25f), Random.Range(-0.25f, 0.25f));
+        positionVariation = new Vector2(Random.Range(-0.75f, 0.75f), Random.Range(-0.5f, 0.5f));
         var popup = Instantiate(textObject, pos + positionVariation, Quaternion.identity, canvas.transform);
         var temp = popup.GetComponent<TextMeshProUGUI>();
         temp.text = text;

@@ -19,6 +19,7 @@ using UnityEngine.Pool;
 using Packages.Rider.Editor.UnitTesting;
 using UnityEditor.ShaderKeywordFilter;
 using UnityEditor.PackageManager.UI;
+using UnityEngine.InputSystem.Composites;
 
 public class UIManager : MonoBehaviour
 {
@@ -92,10 +93,7 @@ public class UIManager : MonoBehaviour
     private Button drillMotorButton;
     private Button drillGearboxButton;
 
-    private VisualElement drillBitSlot;
-    private VisualElement batterySlot;
-    private VisualElement motorSlot;
-    private VisualElement gearboxSlot;
+    private List<VisualElement> drillSlots = new();
 
     private StyleLength drillSlotWidth;
     private StyleLength drillSlotHeight;
@@ -181,10 +179,15 @@ public class UIManager : MonoBehaviour
         drillPartInventory = root.Q<ScrollView>("drillPartInventory");
         drillPartInventorySlots = drillPartInventory.Query<VisualElement>(className: "drillInventorySlot").ToList();
 
-        drillBitSlot = root.Q<VisualElement>("drillBitSlot");
-        batterySlot = root.Q<VisualElement>("batterySlot");
-        motorSlot = root.Q<VisualElement>("motorSlot");
-        gearboxSlot = root.Q<VisualElement>("gearboxSlot");
+        drillSlots.Add(root.Q<VisualElement>("drillBitSlot"));
+        drillSlots.Add(root.Q<VisualElement>("batterySlot"));
+        drillSlots.Add(root.Q<VisualElement>("motorSlot"));
+        drillSlots.Add(root.Q<VisualElement>("gearboxSlot"));
+
+        for (int i = 0; i < drillSlots.Count; ++i)
+        {
+            drillSlots.ElementAt(i).style.backgroundImage = new(drill.partSprites[i]); 
+        }
 
         drillButton.clicked += DrillWindow;
         drillClose.clicked += DrillWindow;
@@ -242,7 +245,7 @@ public class UIManager : MonoBehaviour
         steelPickOwned = false;
         titaniumPickOwned = false;
 
-        drillButton.text = "Drill: 1000 ice";
+        drillButton.text = "Drill: 500 ice";
 
         stonePickBuy.text = stonePickCost.ToString();
         copperPickBuy.text = copperPickCost.ToString();
@@ -251,12 +254,22 @@ public class UIManager : MonoBehaviour
         steelPickBuy.text = steelPickCost.ToString();
         titaniumPickBuy.text = titaniumPickCost.ToString();
         background = root.Q<VisualElement>("Background");
+
         background.RegisterCallback<GeometryChangedEvent>(GeometryChangedCallback);
-        drillWindowContent.RegisterCallback<MouseOutEvent>(UnhoverCallback);
-        drillWindowContent.RegisterCallback<MouseOverEvent>(HoverCallback);
+        drillWindowContent.RegisterCallback<MouseOutEvent>(Unhover);
+        drillWindowContent.RegisterCallback<MouseOverEvent>(Hover);
+        drillWindowContent.RegisterCallback<MouseDownEvent>(DrillClick);
     }
-    
-    private void UnhoverCallback(MouseOutEvent evt)
+
+    private void GeometryChangedCallback(GeometryChangedEvent evt)
+    {
+        background.UnregisterCallback<GeometryChangedEvent>(GeometryChangedCallback);
+
+        drillSlotWidth = drillPartInventorySlots[0].resolvedStyle.width;
+        drillSlotHeight = drillPartInventorySlots[0].resolvedStyle.height;
+    }
+
+    private void Unhover(MouseOutEvent evt)
     {
         VisualElement target = (VisualElement)evt.target;
         if (!target.ClassListContains("hasTooltip")) return;
@@ -266,19 +279,19 @@ public class UIManager : MonoBehaviour
         
     }
 
-    private void HoverCallback(MouseOverEvent evt)
+    private void Hover(MouseOverEvent evt)
     {
         VisualElement target = (VisualElement)evt.target;
         if (!target.ClassListContains("hasTooltip")) return;
         OpenDrillPartTooltip(target, GetPart(target));              
     }
 
-    private void GeometryChangedCallback(GeometryChangedEvent evt)
+    private void DrillClick(MouseDownEvent evt)
     {
-        background.UnregisterCallback<GeometryChangedEvent>(GeometryChangedCallback);
-
-        drillSlotWidth = drillPartInventorySlots[0].resolvedStyle.width;
-        drillSlotHeight = drillPartInventorySlots[0].resolvedStyle.height;
+        if (!evt.ctrlKey || evt.button != 0) return;
+        VisualElement target = (VisualElement)evt.target;
+        if (!target.ClassListContains("drillPart")) return;
+        EquipDrillPart(target, GetPart(target));
     }
 
     private void OpenDrillPartTooltip(VisualElement element, Drill.Part part)
@@ -324,6 +337,23 @@ public class UIManager : MonoBehaviour
         return drill.partInventory[int.Parse(element.name)];
     }
 
+    private void EquipDrillPart (VisualElement element, Drill.Part part)
+    {
+        int type = (int)part.type;
+        int index = int.Parse(element.name);
+        StyleBackground tempImage = drillSlots.ElementAt(type).style.backgroundImage;
+        Drill.Part tempPart = drill.drillParts[type];
+        drill.drillParts[type] = drill.partInventory[index];
+        drillSlots.ElementAt(type).style.backgroundImage = element.style.backgroundImage;
+        drill.partInventory[index] = tempPart;
+        element.style.backgroundImage = tempImage;
+
+        ((Label)tooltipWindow.ElementAt(0)).text = part.name;
+        tooltipWindow.ElementAt(1).style.backgroundImage = new(part.sprite);
+        ((Label)tooltipWindow.ElementAt(2)).text = part.implicit1.type.ToString() + ": " + part.implicit1.value.ToString();
+        ((Label)tooltipWindow.ElementAt(3)).text = part.implicit2.type.ToString() + ": " + part.implicit2.value.ToString();
+    }
+
     private void DrillWindow()
     {
         if (drill.drillOwned)
@@ -331,19 +361,43 @@ public class UIManager : MonoBehaviour
             if (drillWindow.visible == false)
             {
                 drillWindow.visible = true;
+                drill.SetPartEffects();
                 return;
             }
             drillWindow.visible = false;
         }
         else
         {
-            if (GameManager.Instance.ice >= 1000)
+            if (GameManager.Instance.ice >= 500)
             {
                 drill.drillOwned = true;
-                GameManager.Instance.ice -= 1000;
+                GameManager.Instance.ice -= 500;
                 drillButton.text = "Drill";
             }
         }
+    }
+
+    public void PartInventorySprite(Sprite partSprite, int index)
+    {
+        if (index >= drillPartInventorySlots.Count)
+        {
+            VisualElement newRow = new();
+            newRow.AddToClassList("drillInventoryRow");
+            drillPartInventory.Add(newRow);
+            for (int i = 0; i < 4; ++i)
+            {
+                VisualElement newSlot = new();
+                newSlot.AddToClassList("drillInventorySlot");
+                newRow.Add(newSlot);
+                drillPartInventorySlots.Add(newSlot);
+            }
+        }
+        VisualElement part = new();
+        part.style.backgroundImage = new StyleBackground(partSprite);
+        part.name = index.ToString();
+        part.AddToClassList("drillPart");
+        part.AddToClassList("hasTooltip");
+        drillPartInventory.ElementAt(Mathf.FloorToInt(index / 4)).ElementAt(index % 4).Add(part);
     }
 
     private void UpgradesWindow()
@@ -549,29 +603,6 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public void PartInventorySprite(Sprite partSprite, int index)
-    {
-        if (index >= drillPartInventorySlots.Count)
-        {
-            VisualElement newRow = new();
-            newRow.AddToClassList("drillInventoryRow");
-            drillPartInventory.Add(newRow);
-            for (int i = 0; i < 4; ++i)
-            {
-                VisualElement newSlot = new();
-                newSlot.AddToClassList("drillInventorySlot");
-                newRow.Add(newSlot);
-                drillPartInventorySlots.Add(newSlot);
-            }
-        }
-        VisualElement part = new();
-        part.style.backgroundImage = new StyleBackground(partSprite);
-        part.name = index.ToString();
-        part.AddToClassList("drillPart");
-        part.AddToClassList("hasTooltip");
-        drillPartInventory.ElementAt(Mathf.FloorToInt(index / 4)).ElementAt(index % 4).Add(part);
-    }
-
     // Update is called once per frame
     private void OnGUI()
     {
@@ -594,11 +625,6 @@ public class UIManager : MonoBehaviour
         autMinCost.text = upgrades.autoMinerCost.ToString();
 
         pickaxeImage.style.backgroundImage = new StyleBackground(pickaxeSprites[GameManager.Instance.currentPickaxe]);
-
-        drillBitSlot.style.backgroundImage = new StyleBackground(drill.drillParts[0].sprite);
-        batterySlot.style.backgroundImage = new StyleBackground(drill.drillParts[1].sprite);
-        motorSlot.style.backgroundImage = new StyleBackground(drill.drillParts[2].sprite);
-        gearboxSlot.style.backgroundImage = new StyleBackground(drill.drillParts[3].sprite);
     }
 
     private void Update()

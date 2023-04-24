@@ -93,7 +93,7 @@ public class IceCube : MonoBehaviour
         if (hp <= 0)
         {
             GameManager.Instance.ice += GameManager.Instance.iceMultiplier * baseIce + GameManager.Instance.bonusIce;
-            if (GameManager.Instance.partDropChance > Random.Range(0f, 1f))
+            if (GameManager.Instance.drillPartDropChance + GameManager.Instance.partDropChance > Random.Range(0f, 1f))
             {
                 drill.AddPartToInventory(drill.GeneratePart());
             }
